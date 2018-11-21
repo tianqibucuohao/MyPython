@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>
+<title>File-Save 2009</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+body,td,th {color: #004080;font-family:Verdana;font-size:12px;}
+body {background-color: #888888;padding:0;margin:0}
+a{color: #006600;text-decoration: none;}
+a:hover{text-decoration:underline;}
+.btn{padding:5px 20px;margin-top:5px;}
+.container {width:100%;max-width:800px;}
+.list {padding-bottom:20px;}
+.list a{display:block;margin-top:20px;}
+.list img{width:100%;max-width:760px;max-height:90px;}
+.list li{list-style:none;width:100%;max-width:760px;height:90px;margin-top:20px;display:table;border:1px #003366 solid}
+.list ul{display:table-cell;vertical-align:middle;line-height:150%;padding:0px;}
+#foo1ter { position: fixed; bottom: 0;width: 100%; background-color:#ED4C67}
+#foo1ter li{list-style:none;text-align:center;font-size:2em;color: white; padding:10px;}
+</style>
+</head>
+<body>
+<br>
+
+<script src="link.php_files/jquery.js" onerror=""></script>
+<script language="JavaScript">
+var rmJson = '[{"i":"http:\/\/wx3.sinaimg.cn\/large\/007hXDAOgy1fuwmyumrk2g30ka02in2s.gif","u":"https:\/\/www.0379e.com\/jiba123.htm"},{"i":"http:\/\/wx4.sinaimg.cn\/large\/006ZdrOOgy1flbrua1zhjg30ka02i45k.gif","u":"https:\/\/www.458kq.com\/feng89.htm"},{"i":"http:\/\/wx2.sinaimg.cn\/large\/006CZIQPgy1frq9xu2lu3g30l4028gr1.gif","u":"http:\/\/wvw.baidu-jxf.co\/77577.html"},{"i":"https:\/\/www.djy518.com\/jxfbb\/730x90.gif","u":"https:\/\/www.0937js.com\/dxiazai.html"},{"i":"http:\/\/wx4.sinaimg.cn\/large\/006CZIQPgy1frs8l5xf2fg30l402i0yj.gif","u":"https:\/\/www.9j9y.com\/caoliu2.html"},{"i":"http:\/\/dioimg.net\/images\/2018\/06\/05\/34ff4a595ea6e3912f23893d161ea893.gif","u":"http:\/\/www.t2018.rocks\/"},{"i":"http:\/\/wx2.sinaimg.cn\/large\/006ZdrOOgy1fsmfzprh8tg30l402ihae.gif","u":"https:\/\/www.136fc.com\/ylcgg3.htm"},{"i":"http:\/\/wx4.sinaimg.cn\/large\/006CZIQPgy1fsulojgzjsg30l4028479.gif","u":"http:\/\/www.299wz.com"},{"i":"http:\/\/wx4.sinaimg.cn\/large\/006CZIQPly1ft0c7nq8wog30l402i0tc.gif","u":"https:\/\/www.ok9803.com\/caoliu55.html"}]';
+var poJson = '[{"u":"https:\/\/www.0379e.com\/av12com.htm"},{"u":"https:\/\/www.458kq.com\/feng87.htm"}]';var dlData = '<li><ul>Code: 1834a70efb53cbbca0039b809715aa529c02d462220<br>Downloaded: 2023<br><INPUT class="btn" type="submit" value="DOWNLOAD"></ul></li>';
+var rmData = JSON.parse(rmJson);
+var poData = JSON.parse(poJson);
+
+var ert6j = false;
+function dpos(form){
+	var imgs = document.getElementsByTagName('img');
+	if(imgs[0].height==0){
+		alert('请关闭广告屏蔽插件（如ADBLOCK）再尝试下载');
+		return false;
+	}
+	if(ert6j){
+		alert('请关闭广告屏蔽插件（如uBlock）再尝试下载');
+		return false;
+	}
+	if($("img:eq(0)").css('visibility')=='collapse'){
+		alert('请关闭广告屏蔽插件（如uBlock）再尝试下载');
+		return false;
+	}
+	if(poData){
+		var ider = Math.floor(Math.random() * poData.length);
+		window.open(poData[ider].u);
+	}
+	return true;
+}
+
+function initDownload(){
+	if(rmData){
+		var ider = Math.floor(Math.random() * rmData.length);
+		rmData.forEach(function(item, index){
+			var dl = index==ider ? dlData : '';
+			document.write('<a href="'+item.u+'" target="_blank"><img src="'+item.i+'"></a>' + dl);
+		});
+	}else{
+		document.write(dlData);
+	}
+}
+
+$.ajax({url: "ads.js", dataType: "script"}).fail(function(){
+	$('#foo1ter').css('display', '');
+}); 
+
+</script>
+
+<form action="download.php" method="get" onsubmit="return dpos()">
+<input name="reff" value="981668" type="hidden">
+<input name="ref" value="1834a70efb53cbbca0039b809715aa529c02d462220" type="hidden">
+<table class="container" bgcolor="#003366" cellpadding="1" cellspacing="1" width="800" align="center">
+<tbody><tr>
+	<td bgcolor="#CFE2CD" height="50" align="center"><span style="font-size:24px"><b>File-Save 2009</b></span></td>
+</tr>
+<tr>
+	<td class="list" bgcolor="white" align="center">
+		<script type="text/javascript">initDownload();</script><a href="https://www.0379e.com/jiba123.htm" target="_blank"><img src="link.php_files/007hXDAOgy1fuwmyumrk2g30ka02in2s.jpeg"></a><li><ul>Code: 1834a70efb53cbbca0039b809715aa529c02d462220<br>Downloaded: 2023<br><input class="btn" value="DOWNLOAD" type="submit"></ul></li><a href="https://www.458kq.com/feng89.htm" target="_blank"><img src="link.php_files/006ZdrOOgy1flbrua1zhjg30ka02i45k.jpeg"></a><a href="http://wvw.baidu-jxf.co/77577.html" target="_blank"><img src="link.php_files/006CZIQPgy1frq9xu2lu3g30l4028gr1.jpeg"></a><a href="https://www.0937js.com/dxiazai.html" target="_blank"><img src="link.php_files/730x90.gif"></a><a href="https://www.9j9y.com/caoliu2.html" target="_blank"><img src="link.php_files/006CZIQPgy1frs8l5xf2fg30l402i0yj.jpeg"></a><a href="http://www.t2018.rocks/" target="_blank"><img src="link.php_files/34ff4a595ea6e3912f23893d161ea893.gif"></a><a href="https://www.136fc.com/ylcgg3.htm" target="_blank"><img src="link.php_files/006ZdrOOgy1fsmfzprh8tg30l402ihae.jpeg"></a><a href="http://www.299wz.com/" target="_blank"><img src="link.php_files/006CZIQPgy1fsulojgzjsg30l4028479.jpeg"></a><a href="https://www.ok9803.com/caoliu55.html" target="_blank"><img src="link.php_files/006CZIQPly1ft0c7nq8wog30l402i0tc.jpeg"></a>
+	</td>
+</tr>
+</tbody></table>
+</form>
+<div id="foo1ter"><li style="display: none;">您的浏览器已屏蔽此页面上的广告，RMDOWN累计 免费 提供下载 12 年 316 天，网站的维护需要广告商的赞助，请将我们的网站添加到广告屏蔽软件的白名单，是对我们最大的支持</li></div>
+<script type="text/javascript">
+$("li:eq(1)").css('display', 'none');
+$("img:eq(1)").on("error", function(){
+	$("li:eq(1)").css('display', '');
+	//$('#foo1ter').css('display', '');
+});
+$("img:eq(0)").on("load", function(){
+	if($(this).css('visibility')=='collapse'){
+		ert6j = true;
+	}
+});
+</script>
+<center>Illegal files report: <a href="http://www.rmdown.com/ticket.php">Contact us</a>, we will remove it asap, thanks!<br>
+Copyright @ 2007-2009 <a href="http://www.rmdown.com/">Torrent File Save</a>. All rights reserved (Version 2.1)</center>
+
+</body></html>
