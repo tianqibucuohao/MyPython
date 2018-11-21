@@ -57,11 +57,12 @@ def Updatefile(uname, pwd,eth):
     except ...:
         print("error")
     f.close()
-    UpdateData(uname,pwd)
+    UpdateUserInfoFile("pap-secrets",uname,pwd)
+    UpdateUserInfoFile("chap-secrets",uname,pwd)
     
-def UpdateData(uname, pwd):
+def UpdateUserInfoFile(filename,uname, pwd):
     #os.chdir("/etc/pppd")
-    f=open("chap-secrets","r+")
+    f=open(filename,"r+")
     data=""
     if (f):
         lines=f.readlines()
@@ -98,7 +99,8 @@ def main():
     print("name", usname)
     print("pwd:",uspwd)
     #Updatefile(usname, uspwd, useth)
-    UpdateData(usname,uspwd)
+    UpdateUserInfoFile("pap-secrets",usname,uspwd)
+    UpdateUserInfoFile("chap-secrets",usname,uspwd)
 
 if (__name__=="__main__"):
     main()
