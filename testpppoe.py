@@ -93,7 +93,7 @@ def UpdateUserInfoFile(filename,uname, pwd):
     f.close()
 
 def Is32or64():
-    un = os.system('uname -a')
+    un = os.popen('uname -a').read()
     info = repr(un)
     del un
     if (info.find("x86_64") != 64):
@@ -103,23 +103,49 @@ def Is32or64():
 
 def IsSetupRpPPPoE():
     cmd = 'rpm -qa | grep rp-pppoe'
-    uc = os.system(cmd)
-
+    uc = os.popen(cmd).read()
+   
+"""
+区分linux发行版本厂商
+"""
+def GetReleaseVer():
+    cmd = 'cat /etc/*-release'
+    us = os.popen(cmd).read()
+    ret = repr(us)
+    rpm=1
+    if (ret.find("CentOs") != -1 
+        or ret.find("RedHat") != -1):
+        rpm = 1
+    elif (ret.find("Ubuntu") != -1 
+             or ret.find("debian") != -1):
+        rpm = 0
+    else:
+        rpm = 1
+    return rpm
+        
 def UpdateDslprivode(usname,useth):
-    os.chdir('/etc/ppp/peers')
-    f = open('dsl-privode',"r")
+    #os.chdir('/etc/ppp/peers')
+    print(os.getcwd())
+    f = open("dsl-provider","r+")
     if (f):
         lines = f.readlines()
         ll = len(lines)
-        bFind = False
-        ueth="plugin rp-pppoe.so " + useth
-        uname = "user \""+usname + "\""
+        ueth="\nplugin rp-pppoe.so " + useth+"\n"
+        uname = "\nuser \""+usname + "\"\n"
+        bFindName = False
+        bFindEth = False
         for x in range(0, ll):
-            line = liens[x]
+            line = lines[x]
             if (line.find('plugin') != -1):
-                lines[x]=ueth
+                lines[x] = ueth
+                bFindEth = True
             if (line.find('user') != -1):
-                lines[x]=uname
+                lines[x] = uname
+                bFindName = True
+        if (bFindEth == False):
+            lines.append(ueth)
+        if (bFindName == False):
+            lines.append(uname)
         f.seek(0,0)
         f.truncate()
         f.writelines(lines)    
@@ -135,7 +161,7 @@ def main():
     #UpdateUserInfoFile("pap-secrets",usname,uspwd)
     #UpdateUserInfoFile("chap-secrets",usname,uspwd)
     #print("ret ", Is32or64())
-    #os.system('./pppoe-start')
+    #os.popen('./pppoe-start')
     UpdateDslprivode(usname, useth)
 
 if (__name__ == "__main__"):
