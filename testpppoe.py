@@ -102,9 +102,19 @@ def Is32or64():
         return 0
 
 def IsSetupRpPPPoE():
-    cmd = 'rpm -qa | grep rp-pppoe'
+    cmd = ''
+    bSupportRpm = GetReleaseVer()
+    if (bSupportRpm == True):
+        cmd = 'rpm -qa | grep rp-pppoe'
+    else:
+        cmd = 'apt-cache show pppoe'
+        
     uc = os.popen(cmd).read()
-   
+    data=repr(uc)
+    if (data.find('pppoe') != -1):
+        return True
+    else:
+        return False
 """
 区分linux发行版本厂商
 """
