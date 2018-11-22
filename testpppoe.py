@@ -103,7 +103,28 @@ def Is32or64():
 
 def IsSetupRpPPPoE():
     cmd = 'rpm -qa | grep rp-pppoe'
-    uc = 
+    uc = os.system(cmd)
+
+def UpdateDslprivode(usname,useth):
+    os.chdir('/etc/ppp/peers')
+    f = open('dsl-privode',"r")
+    if (f):
+        lines = f.readlines()
+        ll = len(lines)
+        bFind = False
+        ueth="plugin rp-pppoe.so " + useth
+        uname = "user \""+usname + "\""
+        for x in range(0, ll):
+            line = liens[x]
+            if (line.find('plugin') != -1):
+                lines[x]=ueth
+            if (line.find('user') != -1):
+                lines[x]=uname
+        f.seek(0,0)
+        f.truncate()
+        f.writelines(lines)    
+    f.close()
+
 def main():
     usname = "web-9"#input("username:")
     uspwd = "222"#input("pwd:")
@@ -113,8 +134,9 @@ def main():
     #UpdateConfFile(usname, uspwd, useth)
     #UpdateUserInfoFile("pap-secrets",usname,uspwd)
     #UpdateUserInfoFile("chap-secrets",usname,uspwd)
-    print("ret ", Is32or64())
+    #print("ret ", Is32or64())
     #os.system('./pppoe-start')
+    UpdateDslprivode(usname, useth)
 
 if (__name__ == "__main__"):
     main()
