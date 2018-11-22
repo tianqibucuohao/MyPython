@@ -113,7 +113,7 @@ def GetReleaseVer():
     us = os.popen(cmd).read()
     ret = repr(us)
     rpm=1
-    if (ret.find("CentOs") != -1 
+    if (ret.find("CentOS") != -1 
         or ret.find("RedHat") != -1):
         rpm = 1
     elif (ret.find("Ubuntu") != -1 
