@@ -161,6 +161,20 @@ def UpdateDslprivode(usname,useth):
         f.writelines(lines)    
     f.close()
 
+
+def StartPPPoE():
+    ret = GetReleaseVer()
+    cmd = ""
+    if (ret == 1):
+        cmd = "./pppoe-start"
+    else:
+        cmd = "pon dsl-provider"
+    """
+    centos 会卡命令，直接脚本执行结束，可以取回执行结果
+    ubuntu不会命令执行完，就结束。执行结果需要从plog中解
+    """
+    
+
 def main():
     usname = "web-9"#input("username:")
     uspwd = "222"#input("pwd:")
