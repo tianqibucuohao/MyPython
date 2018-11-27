@@ -7,6 +7,9 @@ Created on Mon Nov 19 13:58:28 2018
 
 import os
 import shutil
+#import asyncio
+import time
+import subprocess
 
 def CutString(src, begin, end=""):
     s = ""
@@ -54,8 +57,8 @@ def UpdateConfFile(uname, pwd,eth):
                 f.write(data)
             else:
                 print("write file,error")
-    except ...:
-        print("error")
+    except Exception as exc:
+        print("error:", exc)
     f.close()
     UpdateUserInfoFile("pap-secrets",uname,pwd)
     UpdateUserInfoFile("chap-secrets",uname,pwd)
@@ -160,8 +163,28 @@ def UpdateDslprivode(usname,useth):
         f.truncate()
         f.writelines(lines)    
     f.close()
+    os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
+
+def Checkplog(cmd):
+    print("log ",cmd )
+    os.system(cmd)
+    #while (True):
+    try:
+        ret = subprocess.Popen("plog")
+        ret.wait()
+        #ret.close()
+        ret = repr(ret)
+        #print("ret",ret)
+    #except TimeoutExpired as e:
+    #    print("err timeout");
+    except OSError as e:
+        print("error",e)
 
 
+def CheckStatus(cmd):
+    ret = os.popen(cmd)
+    print(ret)
+    
 def StartPPPoE():
     ret = GetReleaseVer()
     cmd = ""
@@ -173,12 +196,16 @@ def StartPPPoE():
     centos 会卡命令，直接脚本执行结束，可以取回执行结果
     ubuntu不会命令执行完，就结束。执行结果需要从plog中解
     """
+    if (ret == 1):
+        CheckStatus(cmd)
+    else:
+        Checkplog(cmd)
     
 
 def main():
     usname = "web-9"#input("username:")
     uspwd = "222"#input("pwd:")
-    useth = "eth2"#input("which ada used:")
+    useth = "eth0"#input("which ada used:")
     print("name", usname)
     print("pwd:",uspwd)
     #UpdateConfFile(usname, uspwd, useth)
@@ -186,7 +213,9 @@ def main():
     #UpdateUserInfoFile("chap-secrets",usname,uspwd)
     #print("ret ", Is32or64())
     #os.popen('./pppoe-start')
-    UpdateDslprivode(usname, useth)
+    #UpdateDslprivode(usname, useth)
+    #StartPPPoE()
+    Checkplog("pon dsl-provider")
 
 if (__name__ == "__main__"):
     main()
