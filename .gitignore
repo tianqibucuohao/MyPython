@@ -105,3 +105,4 @@ venv.bak/
 *.zip
 *.txt
 *.bak
+dsl-provider
