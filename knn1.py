@@ -17,8 +17,10 @@ nc = py.random.randint(0,100,(1,2)).astype(py.float32)
 plt.scatter(nc[:,0], nc[:,1], 80,'g','o')
 
 knn = cv2.ml_KNearest()
+
 knn.train(traindata,responses)
 ret,result,nb,dist = knn.findNearest(nc,3)
 
+print("ret %d, result %d, dist %d" % (ret, result, dist) )
 plt.show()
  
