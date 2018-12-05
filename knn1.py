@@ -16,11 +16,16 @@ plt.scatter(blut[:,0],blut[:,1],80,'b','^')
 nc = py.random.randint(0,100,(1,2)).astype(py.float32)
 plt.scatter(nc[:,0], nc[:,1], 80,'g','o')
 
-knn = cv2.ml_KNearest()
-
-knn.train(traindata,responses)
+knn = cv2.ml.KNearest_create()
+#knn = cv2.ml_KNearest()
+#cv2.ml_StatModel().KNearest_create()
+#knn.train(traindata,responses)
+knn.train(traindata,cv2.ml.ROW_SAMPLE,responses)
 ret,result,nb,dist = knn.findNearest(nc,3)
 
-print("ret %d, result %d, dist %d" % (ret, result, dist) )
+print("ret :", ret)
+print("result :", result)
+print("nb :", nb)
+print("dist :", dist)
 plt.show()
  
