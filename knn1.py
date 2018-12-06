@@ -22,7 +22,7 @@ plt.scatter(red[:,0],red[:,1],80,'r','^')
 
 blut = traindata[responses.ravel() ==1]
 print(blut)
-plt.scatter(blut[:,0],blut[:,1],80,'b','s')
+plt.scatter(blut[:,0],blut[:,1],90,'b','s')
 
 nc = py.random.randint(0,100,(1,2)).astype(py.float32)
 plt.scatter(nc[:,0], nc[:,1], 80,'g','o')
