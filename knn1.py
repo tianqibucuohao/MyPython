@@ -14,9 +14,11 @@ responses = py.random.randint(0,2,(25,1)).astype(py.float32)
 
 red = traindata[responses.ravel()==0]
 plt.scatter(red[:,0],red[:,1],80,'r','^')
-print(red)
-print(red[:,0])
-print(red[:,1])
+#print(red)
+# [:,0] numpy 取所有行的第0个数据
+# [:,1] numpy 取所有行的第1个数据
+#print("red[:,0]",red[:,0])
+#print("red[:,1]",red[:,1])
 
 blut = traindata[responses.ravel() ==1]
 print(blut)
@@ -30,7 +32,7 @@ knn = cv2.ml.KNearest_create()
 #cv2.ml_StatModel().KNearest_create()
 #knn.train(traindata,responses)
 knn.train(traindata,cv2.ml.ROW_SAMPLE,responses)
-r=1
+
 ret,result,nb,dist = knn.findNearest(nc,3)
 
 print("ret :", ret)
