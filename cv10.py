@@ -6,7 +6,7 @@ cap = cv2.VideoCapture(0)
 while(1):
 
     # Take each frame
-    _, frame = cap.read()
+    frame = cap.read()
 
     # Convert BGR to HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -16,7 +16,7 @@ while(1):
     upper_blue = np.array([130,255,255])
 
     # Threshold the HSV image to get only blue colors
-    mask = cv2.inRange(hsv, lower_green, upper_green)
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
     # Bitwise-AND mask and original image
     res = cv2.bitwise_and(frame,frame, mask= mask)

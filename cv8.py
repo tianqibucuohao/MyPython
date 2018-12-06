@@ -4,24 +4,24 @@ import numpy as np
 img = cv2.imread('1.jpg')
 
 px = img[100,100]
-print px
+print(px)
 
 blue = img[100, 100,0]
-print blue
+print(blue)
 
 img[100, 100] = [255,255,255]
-print img[100,100]
+print( img[100,100])
 
 img.item(10,10,2)
 
 img.itemset((10,10,2),100)
 img.item(10,10,2)
 
-print img.shape
+print( img.shape)
 
-print img.size
+print( img.size)
 
-print img.dtype
+print( img.dtype)
 
 ball = img[280:350, 330,390]
 # roi  copy or clip area
