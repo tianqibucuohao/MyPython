@@ -13,6 +13,7 @@ def main():
     png = cv2.imread('bra.jpg')
     gray = cv2.cvtColor(png, cv2.COLOR_BGR2GRAY)
     # split 5000cells
+    
   #  cells = [np.hsplit(row,100) for row in np.vsplit(gray, 50)]
 #    #make it into numpy.array
 #    x = np.array(cells)
