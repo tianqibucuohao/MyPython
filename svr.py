@@ -4,9 +4,9 @@ import socket
 def main():
     host=''
     port=8080
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.bind((host, port))
-        s.listen(1)
+        #s.listen(1)
         conn, addr=s.accept()
         with conn:
             print('connectec by' , addr)

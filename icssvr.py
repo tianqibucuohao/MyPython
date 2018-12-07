@@ -33,9 +33,9 @@ def BindPort():
     print("bind port over")
 
 def main():
-    IcsCtrl("net stop sharedaccess")
+    #IcsCtrl("net stop sharedaccess")
     BindPort()
-    IcsCtrl("net start sharedaccess")
+    #IcsCtrl("net start sharedaccess")
     print("over")
 
 if (__name__ == "__main__"):
