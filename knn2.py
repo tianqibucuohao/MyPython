@@ -13,8 +13,8 @@ def main():
     png = cv2.imread('bra.jpg')
     gray = cv2.cvtColor(png, cv2.COLOR_BGR2GRAY)
     # split 5000cells
-    
-  #  cells = [np.hsplit(row,100) for row in np.vsplit(gray, 50)]
+    print(type(gray))  
+#    cells = [np.hsplit(row,100) for row in np.vsplit(gray, 50)]
 #    #make it into numpy.array
 #    x = np.array(cells)
 #    #prepare train_data and test_data
@@ -33,10 +33,8 @@ def main():
 #    correct = np.count_nonzero(matches)
 #    accuracy = correct*100.0/result.size
 #    print(accuracy)
-    cv2.imshow('hello',gray)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
     
 
 if (__name__ == "__main__"):
-    main()
+    #main()
+    help(len)
