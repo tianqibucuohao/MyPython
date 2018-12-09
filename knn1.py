@@ -1,5 +1,5 @@
 import cv2
-import numpy as py
+import numpy as np
 import matplotlib.pyplot as plt
 
 def main():
@@ -8,8 +8,8 @@ def main():
     # numpy.random.randint(low,high,(个数，元组)):区间离散均匀分布的整数
     #t=py.random.randint(0,100,(25,3))
     #print(t)
-    traindata = py.random.randint(0,100,(25,2)).astype(py.float32)
-    responses = py.random.randint(0,2,(25,1)).astype(py.float32)
+    traindata = np.random.randint(0,100,(25,2)).astype(np.float32)
+    responses = np.random.randint(0,2,(25,1)).astype(np.float32)
     
     red = traindata[responses.ravel()==0]
     plt.scatter(red[:,0],red[:,1],80,'r','^')
@@ -23,7 +23,7 @@ def main():
     print(blut)
     plt.scatter(blut[:,0],blut[:,1],90,'b','s')
     
-    nc = py.random.randint(0,100,(1,2)).astype(py.float32)
+    nc = np.random.randint(0,100,(1,2)).astype(np.float32)
     plt.scatter(nc[:,0], nc[:,1], 80,'g','o')
     
     knn = cv2.ml.KNearest_create()
