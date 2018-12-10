@@ -40,8 +40,11 @@ def main():
     print("result :", result)
     print("nb :", nb)
     print("dist :", dist)
+    rr = knn.isClassifier()
+    print("is classifier:", rr)
     #print("r:", r)
     plt.show()
+    help(knn)
     
 if (__name__ == "__main__"):
     main()
