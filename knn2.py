@@ -40,10 +40,12 @@ def main():
     print(type(gray))
     #print("dim:", gray.ndim)
     print("shape:", gray.shape)
-    help(gray.shape)
-    # split 5000cells
+    #help(gray.shape)
+    # tuple get value
+    print(gray.shape[1])
+    # split 5000 cells
     #print(np.vsplit(gray, 960))
-    cells = ([np.hsplit(row,540) for row in np.vsplit(gray, 960)])
+#    cells = ([np.hsplit(row,540) for row in np.vsplit(gray, 960)])
 #    #make it into numpy.array
 #    x = np.array(cells)
 #    #prepare train_data and test_data
