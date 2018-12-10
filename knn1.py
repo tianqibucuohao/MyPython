@@ -8,6 +8,7 @@ def main():
     # numpy.random.randint(low,high,(个数，元组)):区间离散均匀分布的整数
     #t=py.random.randint(0,100,(25,3))
     #print(t)
+    print(type(np.random.randint(0,100,(25,2))))
     traindata = np.random.randint(0,100,(25,2)).astype(np.float32)
     responses = np.random.randint(0,2,(25,1)).astype(np.float32)
     
@@ -20,7 +21,7 @@ def main():
     #print("red[:,1]",red[:,1])
     
     blut = traindata[responses.ravel() ==1]
-    print(blut)
+    #print(blut)
     plt.scatter(blut[:,0],blut[:,1],90,'b','s')
     
     nc = np.random.randint(0,100,(1,2)).astype(np.float32)
@@ -40,11 +41,11 @@ def main():
     print("result :", result)
     print("nb :", nb)
     print("dist :", dist)
-    rr = knn.isClassifier()
-    print("is classifier:", rr)
+    #rr = knn.isClassifier()
+    #print("is classifier:", rr)
     #print("r:", r)
     plt.show()
-    help(knn)
+    #help(knn)
     
 if (__name__ == "__main__"):
     main()
