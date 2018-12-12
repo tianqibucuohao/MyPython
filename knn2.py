@@ -9,6 +9,15 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+def savedata(train, traindata):
+    np.savez('knn_data.npz',train=train,train_labels=traindata)
+    
+def loaddata(path):
+    with np.load('knn_data.npz') as data:
+        print(data.files)
+        train = data['train']
+        train_labels = data['train_labels']
+
 def demo():
     img = cv2.imread('digits.png')
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -38,6 +47,7 @@ def demo():
     correct = np.count_nonzero(matches)
     accuracy = correct*100.0/result.size
     print( accuracy )
+    savedata(train,train_labels)
 
 def main():
     png = cv2.imread('bra.jpg')
