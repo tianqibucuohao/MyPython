@@ -21,18 +21,21 @@ def loaddata(path):
 def demo():
     img = cv2.imread('digits.png')
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    print(gray.shape)#(1000,2000): w=2000,h=1000
+    #print(gray.shape)#(1000,2000): w=2000,h=1000
     # Now we split the image to 5000 cells, each 20x20 size
     cells = [np.hsplit(row,100) for row in np.vsplit(gray,50)]
-    
+    print(type(cells))
+    print(len(cells[0]))
     # Make it into a Numpy array. It size will be (50,100,20,20)
-    x = np.array(cells)
-    print(type(x))
-    
-    print(len(x))
+    x = np.array(cells)  # 四维数组 
+    #print(type(x))
+    #print(len(x))
+    print(x.ndim)
+    print(x.shape)
     # Now we prepare train_data and test_data.
     train = x[:,:50].reshape(-1,400).astype(np.float32) # Size = (2500,400)
     test = x[:,50:100].reshape(-1,400).astype(np.float32) # Size = (2500,400)
+    
     # Create labels for train and test data
     k = np.arange(10)
     train_labels = np.repeat(k,250)[:,np.newaxis]
@@ -47,7 +50,7 @@ def demo():
     correct = np.count_nonzero(matches)
     accuracy = correct*100.0/result.size
     print( accuracy )
-    savedata(train,train_labels)
+    #savedata(train,train_labels)
 
 def main():
     png = cv2.imread('bra.jpg')
