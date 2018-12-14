@@ -30,15 +30,17 @@ def demo():
     x = np.array(cells)  # 四维数组 
     #print(type(x))
     #print(len(x))
-    print(x.ndim)
-    print(x.shape)
+    #print(x.ndim)
+    #print(x.shape)
     # Now we prepare train_data and test_data.
     train = x[:,:50].reshape(-1,400).astype(np.float32) # Size = (2500,400)
+    print(train.shape)
     test = x[:,50:100].reshape(-1,400).astype(np.float32) # Size = (2500,400)
     
     # Create labels for train and test data
     k = np.arange(10)
     train_labels = np.repeat(k,250)[:,np.newaxis]
+    print(train_labels.shape)
     test_labels = train_labels.copy()
     # Initiate kNN, train the data, then test it with test data for k=1
     knn = cv2.ml.KNearest_create()
