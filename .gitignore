@@ -106,3 +106,10 @@ venv.bak/
 *.txt
 *.bak
 *.json
+knn_data.npz
+*.in
+*.cpp
+*.cmd
+*.java
+*.mk
+*.sh
