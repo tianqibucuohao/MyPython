@@ -17,7 +17,7 @@ def fbGen(n):
     """
     a, b = 0, 1
     while n>0:
-        #yield a
+        yield a
         a, b, n = b, a+b, n-1
 
 def main():
@@ -31,8 +31,8 @@ def main():
     else:
         ls = [i for i in range(6)]
     print(ls)
-    l=[i for i in fbGen(6)]
-    print(l)
+#    l=[a for a in fbGen(6)]
+#    print(l)
 
 if (__name__ == "__main__"):
     main()
