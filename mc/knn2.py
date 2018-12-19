@@ -8,6 +8,7 @@ Created on Thu Dec  6 19:50:57 2018
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 def savedata(train, traindata):
     np.savez('knn_data.npz',train=train,train_labels=traindata)
@@ -19,8 +20,10 @@ def loaddata(path):
         train_labels = data['train_labels']
 
 def demo():
-    img = cv2.imread('digits.png')
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    path='digits.png'
+    
+    img = cv2.imread(path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     #print(gray.shape)#(1000,2000): w=2000,h=1000
     # Now we split the image to 5000 cells, each 20x20 size
     cells = [np.hsplit(row,100) for row in np.vsplit(gray,50)]
