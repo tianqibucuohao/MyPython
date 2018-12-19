@@ -23,7 +23,10 @@ def demo():
     #  ../path => 打开相对路径文件
     # ..\\..\\path => 打开绝对路径文件
     path='digits.png'
-    
+    ret = os.path.exists(path)
+    if (ret != 1):
+        print("open file error,check file is exist")
+        return
     img = cv2.imread(path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     #print(gray.shape)#(1000,2000): w=2000,h=1000
