@@ -20,6 +20,8 @@ def loaddata(path):
         train_labels = data['train_labels']
 
 def demo():
+    #  ../path => 打开相对路径文件
+    # ..\\..\\path => 打开绝对路径文件
     path='digits.png'
     
     img = cv2.imread(path)
