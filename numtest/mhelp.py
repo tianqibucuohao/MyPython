@@ -4,4 +4,4 @@ import cv2
 import os.path
 import webbrowser
 
-help(os.path)
+help(cv2.cornerHarris)
