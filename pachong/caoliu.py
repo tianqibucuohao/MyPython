@@ -7,6 +7,7 @@ import urllib.error
 import http.client
 
 """
+网站域名失效，不可用，找不到地址
 #类解析所有标签——值
 class MyHtmlParser(HTMLParser):
     def handle_start(self, tag,attrs):

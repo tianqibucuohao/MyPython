@@ -45,6 +45,7 @@ async def main1():
         factorial("B", 3),
         factorial("C", 4),
     )
+    
 async def eternity():
     # Sleep for one hour
     await asyncio.sleep(3600)
@@ -58,5 +59,5 @@ async def main3():
         print('timeout!')
 
 
-asyncio.run(main3())
+asyncio.run(main1())
 print("ok")
