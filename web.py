@@ -11,4 +11,14 @@ url = 'http://www.baidu.com/'
 
 # Open URL in a new tab, if a browser window is already open.
 # ShellExecute()
-webbrowser.open_new_tab(url)
+#webbrowser.open_new_tab(url)
+
+def A(a,b,c):
+    return (c,b,a)
+
+x = 0
+y = 1
+z = 2
+
+x,y,z = A(x,y,z)
+print(x,y,z)

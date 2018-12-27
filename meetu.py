@@ -1,4 +1,4 @@
-import re
+#import re
 #test="hi12.i mhi\\n find,thank you.and u, how about u?"
 # m=re.findall('hi', test)
 # if m:
