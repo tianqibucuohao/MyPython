@@ -7,10 +7,9 @@ global infoStart
 global infoLen
 
 def GetContent(file):
-    ff=open(file,"rb")
-    len=ff.seek(0,2)
-    ff.seek(0,0)
-    tt = ff.read(len)
+    lens = os.path.getsize(file)
+    ff = open(file,"rb")
+    tt = ff.read(lens)
     ff.close()
     tt = repr(tt)
     return tt
