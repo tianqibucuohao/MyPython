@@ -2,7 +2,7 @@
 
 import cv2
 # 加载模型
-net = cv2.dnn.readNetFromTensorflow('the_scream.t7')
+net = cv2.dnn.readNetFromTorch('./models/instance_norm/the_scream.t7')
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV);
 # 读取图片
 image = cv2.imread('bra.jpg')
