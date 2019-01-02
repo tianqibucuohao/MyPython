@@ -5,4 +5,4 @@ import os.path
 import webbrowser
 
 
-help(type)
+help(cv2.dnn)
