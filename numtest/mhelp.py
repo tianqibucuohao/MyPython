@@ -5,4 +5,4 @@ import os.path
 import webbrowser
 
 
-help(cv2.dnn)
+help(cv2.dnn.blobFromImage)
