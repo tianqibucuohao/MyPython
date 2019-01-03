@@ -113,3 +113,4 @@ knn_data.npz
 *.java
 *.mk
 *.sh
+*.t7
