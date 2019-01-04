@@ -5,4 +5,55 @@ import os.path
 import webbrowser
 
 
-help(cv2.dnn.blobFromImage)
+help(cv2.CascadeClassifier)
+#Package          Version 
+#---------------- --------
+#absl-py          0.6.1   
+#astor            0.7.1   
+#backcall         0.1.0   
+#bencode          1.0     
+#cloudpickle      0.6.1   
+#colorama         0.4.0   
+#cycler           0.10.0  
+#decorator        4.3.0   
+#Django           2.1.4   
+#gast             0.2.0   
+#grpcio           1.17.1  
+#image            1.5.27  
+#ipykernel        5.1.0   
+#ipython          7.1.1   
+#ipython-genutils 0.2.0   
+#jedi             0.13.1  
+#jupyter-client   5.2.3   
+#jupyter-core     4.4.0   
+#kiwisolver       1.0.1   
+#Markdown         3.0.1   
+#matplotlib       3.0.2   
+#numpy            1.14.5  
+#opencv-python    3.4.3.18
+#parso            0.3.1   
+#pickleshare      0.7.5   
+#Pillow           5.4.0   
+#pip              18.1    
+#prompt-toolkit   2.0.7   
+#protobuf         3.6.1   
+#Pygments         2.2.0   
+#pyparsing        2.3.0   
+#PyQt5            5.11.3  
+#PyQt5-sip        4.19.13 
+#python-dateutil  2.7.5   
+#pytz             2018.7  
+#pywin32          224     
+#pyzmq            17.1.2  
+#qrcode           6.0     
+#scikit-learn     0.20.0  
+#scipy            1.1.0   
+#setuptools       39.0.1  
+#six              1.11.0  
+#spyder-kernels   0.2.6   
+#termcolor        1.1.0   
+#tornado          5.1.1   
+#traitlets        4.3.2   
+#wcwidth          0.1.7   
+#Werkzeug         0.14.1  
+#wheel            0.32.3  
