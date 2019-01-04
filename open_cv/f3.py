@@ -28,5 +28,5 @@ print('Training faces. It will take a few seconds. Wait ...')
 faces, ids = getImagesAndLabels(path)
 recognizer.train(faces, np.array(ids))
 
-recognizer.write(r'face_trainer\trainer.yml')
+recognizer.write(r'trainer.yml')
 print("{0} faces trained. Exiting Program".format(len(np.unique(ids))))
