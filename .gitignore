@@ -114,3 +114,4 @@ knn_data.npz
 *.mk
 *.sh
 *.t7
+open_cv/Happy.mp4

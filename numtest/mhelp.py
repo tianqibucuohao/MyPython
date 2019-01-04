@@ -3,9 +3,9 @@
 import cv2
 import os.path
 import webbrowser
+import skimage
 
-
-help(cv2.CascadeClassifier)
+help(skimage.measure.compare_ssim)
 #Package          Version 
 #---------------- --------
 #absl-py          0.6.1   
@@ -15,11 +15,13 @@ help(cv2.CascadeClassifier)
 #cloudpickle      0.6.1   
 #colorama         0.4.0   
 #cycler           0.10.0  
+#dask             1.0.0   
 #decorator        4.3.0   
 #Django           2.1.4   
 #gast             0.2.0   
 #grpcio           1.17.1  
 #image            1.5.27  
+#imutils          0.5.2   
 #ipykernel        5.1.0   
 #ipython          7.1.1   
 #ipython-genutils 0.2.0   
@@ -29,6 +31,7 @@ help(cv2.CascadeClassifier)
 #kiwisolver       1.0.1   
 #Markdown         3.0.1   
 #matplotlib       3.0.2   
+#networkx         2.2     
 #numpy            1.14.5  
 #opencv-python    3.4.3.18
 #parso            0.3.1   
@@ -43,15 +46,18 @@ help(cv2.CascadeClassifier)
 #PyQt5-sip        4.19.13 
 #python-dateutil  2.7.5   
 #pytz             2018.7  
+#PyWavelets       1.0.1   
 #pywin32          224     
 #pyzmq            17.1.2  
 #qrcode           6.0     
+#scikit-image     0.14.1  
 #scikit-learn     0.20.0  
 #scipy            1.1.0   
 #setuptools       39.0.1  
 #six              1.11.0  
 #spyder-kernels   0.2.6   
 #termcolor        1.1.0   
+#toolz            0.9.0   
 #tornado          5.1.1   
 #traitlets        4.3.2   
 #wcwidth          0.1.7   

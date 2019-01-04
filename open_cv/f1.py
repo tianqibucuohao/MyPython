@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import os
 #FaceDetection,人脸检测
-os.chdir("c:\python27")
+#os.chdir("c:\python27")
 faceCascade=cv2.CascadeClassifier(r'haarcascade_frontalface_default.xml')
 eyeCascade=cv2.CascadeClassifier(r'haarcascade_eye.xml')
 cap=cv2.VideoCapture('Happy.mp4')
