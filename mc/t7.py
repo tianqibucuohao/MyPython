@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import cv2 as cv
+file='bra.jpg'
+mo='la_muse'
+svae=mo+'-'+file
+model='./models/instance_norm/'+mo+'.t7'
+#print(model)
 # 加载模型
-net = cv.dnn.readNetFromTorch('./models/instance_norm/the_scream.t7')
+net = cv.dnn.readNetFromTorch(model)
 net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV);
 
 # 读取图片
-cv.namedWindow('Styled image', cv.WINDOW_NORMAL)
-frame = cv.imread('TIM.png')
+cv.namedWindow(mo, cv.WINDOW_NORMAL)
+frame = cv.imread(file)
 (inWidth,inHeight) = frame.shape[:2]
 inp = cv.dnn.blobFromImage(frame, 1.0, (inWidth, inHeight),
                           (103.939, 116.779, 123.68), swapRB=False, crop=False)
@@ -26,4 +31,12 @@ t, _ = net.getPerfProfile()
 freq = cv.getTickFrequency() / 1000
 print(t / freq, 'ms')
 
-cv.imshow('Styled image', out)
+(outW,outH) = out.shape[:2]
+print(outW,outH)
+cv.resizeWindow(mo, outH,outW)
+cv.imshow(mo, out)
+#print(frame.shape)
+print(out.shape)
+#tmp = out.reshape(inWidth,inHeight)
+#cv.imsave(svae,tmp)
+
