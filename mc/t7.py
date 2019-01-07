@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2 as cv
-file='bra.jpg'
+file='1.jpg'
 mo='la_muse'
 svae=mo+'-'+file
 model='./models/instance_norm/'+mo+'.t7'
