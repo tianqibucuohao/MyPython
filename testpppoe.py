@@ -80,17 +80,16 @@ def UpdateUserInfoFile(filename,uname, pwd):
         ll = len(lines)-1
         #print(ll)
         data = "\""+uname+"\"\t*\t\""+pwd+"\""
-	print("->",data)
         for x in range(0,ll):
             old = lines[x]
             #print(old)            
             if(old.find(uname) != -1):
-                data = data + '\n'
+                data = data + "\n"
                 lines[x] = data
                 bfind = True
                 break
         if (bfind == False):
-            data = '\n'+data
+            data = "\n" + data
             lines.append(data)
         f.seek(0,0)
         f.truncate()   
@@ -151,8 +150,8 @@ def UpdateDslprivode(usname,pwd,useth):
     if (f):
         lines = f.readlines()
         ll = len(lines)
-        ueth="\nplugin rp-pppoe.so " + useth+"\n"
-        uname = "\nuser \""+usname + "\"\n"
+        ueth="plugin rp-pppoe.so " + useth+"\n"
+        uname = "user \""+usname + "\"\n"
         bFindName = False
         bFindEth = False
         for x in range(0, ll):
@@ -171,8 +170,8 @@ def UpdateDslprivode(usname,pwd,useth):
         f.truncate()
         f.writelines(lines)    
     f.close()
-    UpdateUserInfoFile("pap-secrets",usname,pwd)
-    UpdateUserInfoFile("chap-secrets",usname,pwd)
+#    UpdateUserInfoFile("pap-secrets",usname,pwd)
+#    UpdateUserInfoFile("chap-secrets",usname,pwd)
     
 #    os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
 
@@ -216,16 +215,17 @@ def StartPPPoE():
     
 
 def main():
-    usname = "web-9"#input("username:")
-    uspwd = "222"#input("pwd:")
-    useth = "eth0"#input("which ada used:")
+    usname = "web-19"#input("username:")
+    uspwd = "22"#input("pwd:")
+    useth = "eth1"#input("which ada used:")
     print("name", usname)
     print("pwd:",uspwd)
-    if (GetReleaseVer()):    
-        UpdateConfFile(usname, uspwd, useth)
-    else:
-	print("dsl-privode")
-        UpdateDslprivode(usname, uspwd, useth)
+    UpdateDslprivode(usname, uspwd, useth)
+#    if (GetReleaseVer()):    
+#        UpdateConfFile(usname, uspwd, useth)
+#    else:
+#        print("dsl-privode")
+#        UpdateDslprivode(usname, uspwd, useth)
     
     #os.popen('./pppoe-start')
     

@@ -12,6 +12,6 @@ persist
 #persist
 #maxfail 0
 #holdoff 20
-plugin rp-pppoe.so eth0
-user "p-09"
+plugin rp-pppoe.so eth1
+user "web-19"
 usepeerdns
