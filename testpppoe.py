@@ -62,9 +62,15 @@ def UpdateConfFile(uname, pwd,eth):
     f.close()
     UpdateUserInfoFile("pap-secrets",uname,pwd)
     UpdateUserInfoFile("chap-secrets",uname,pwd)
+    if (Is32or64()):
+        #64
+        os.system('cp ppoe.txt /etc/ppp/ifcfg-ppp0')
+    else:
+        os.system('cp ppoe.txt /etc/ppp/pppoe.conf')
     
 def UpdateUserInfoFile(filename,uname, pwd):
-    #os.chdir("/etc/pppd")
+    os.chdir("/etc/ppp")
+    print(os.getcwd())
     f = open(filename,"r+")
     data=""
     if (f):
@@ -72,15 +78,13 @@ def UpdateUserInfoFile(filename,uname, pwd):
         #print(lines)
         bfind = False
         ll = len(lines)-1
-        print(ll)
-        data = "\""+"web1"+"\"\t*\t\""+pwd+"\""
+        #print(ll)
+        data = "\""+uname+"\"\t*\t\""+pwd+"\""
+	print("->",data)
         for x in range(0,ll):
             old = lines[x]
-            print(old)            
+            #print(old)            
             if(old.find(uname) != -1):
-                #print(data)
-                #new=lines[x].replace(old,data)
-                #print(new)
                 data = data + '\n'
                 lines[x] = data
                 bfind = True
@@ -90,7 +94,7 @@ def UpdateUserInfoFile(filename,uname, pwd):
             lines.append(data)
         f.seek(0,0)
         f.truncate()   
-        #f.flush()
+        f.flush()
         f.writelines(lines)
         print(lines)
     f.close()
@@ -122,6 +126,10 @@ def IsSetupRpPPPoE():
 区分linux发行版本厂商
 """
 def GetReleaseVer():
+    """
+    support rpm : 1
+    donot support :0
+    """
     cmd = 'cat /etc/*-release'
     us = os.popen(cmd).read()
     ret = repr(us)
@@ -136,7 +144,7 @@ def GetReleaseVer():
         rpm = 1
     return rpm
         
-def UpdateDslprivode(usname,useth):
+def UpdateDslprivode(usname,pwd,useth):
     #os.chdir('/etc/ppp/peers')
     print(os.getcwd())
     f = open("dsl-provider","r+")
@@ -163,7 +171,10 @@ def UpdateDslprivode(usname,useth):
         f.truncate()
         f.writelines(lines)    
     f.close()
-    os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
+    UpdateUserInfoFile("pap-secrets",usname,pwd)
+    UpdateUserInfoFile("chap-secrets",usname,pwd)
+    
+#    os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
 
 def Checkplog(cmd):
     print("log ",cmd )
@@ -198,8 +209,10 @@ def StartPPPoE():
     """
     if (ret == 1):
         CheckStatus(cmd)
+        ret = 1
     else:
         Checkplog(cmd)
+        ret = 0
     
 
 def main():
@@ -208,14 +221,17 @@ def main():
     useth = "eth0"#input("which ada used:")
     print("name", usname)
     print("pwd:",uspwd)
-    #UpdateConfFile(usname, uspwd, useth)
-    #UpdateUserInfoFile("pap-secrets",usname,uspwd)
-    #UpdateUserInfoFile("chap-secrets",usname,uspwd)
-    #print("ret ", Is32or64())
+    if (GetReleaseVer()):    
+        UpdateConfFile(usname, uspwd, useth)
+    else:
+	print("dsl-privode")
+        UpdateDslprivode(usname, uspwd, useth)
+    
     #os.popen('./pppoe-start')
-    #UpdateDslprivode(usname, useth)
-    #StartPPPoE()
-    Checkplog("pon dsl-provider")
+    
+    #if (StartPPPoE() == 0):
+    #    Checkplog("pon dsl-provider")
+    #    print("pon dsl-provider")
 
 if (__name__ == "__main__"):
     main()
