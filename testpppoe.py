@@ -45,7 +45,7 @@ def UpdateConfFile(uname, pwd,eth):
             f.seek(0,0)
             ss = f.read(l)
             data = (ss)
-    
+  
             #f.close()
             bb = CutString(data,"USER=", "\n")
             print("bb=", bb)
@@ -77,23 +77,22 @@ def UpdateUserInfoFile(filename,uname, pwd):
         lines = f.readlines()
         #print(lines)
         bfind = False
-        ll = len(lines)-1
+        ll = len(lines)
         #print(ll)
-        data = "\""+uname+"\"\t*\t\""+pwd+"\""
+        data = "\""+uname+"\"\t*\t\""+pwd+"\"\n"
         for x in range(0,ll):
             old = lines[x]
             #print(old)            
             if(old.find(uname) != -1):
-                data = data + "\n"
+                #data = data + "\n"
                 lines[x] = data
                 bfind = True
                 break
         if (bfind == False):
-            data = "\n" + data
+            #data = data + "\n"
             lines.append(data)
         f.seek(0,0)
         f.truncate()   
-        f.flush()
         f.writelines(lines)
         print(lines)
     f.close()
@@ -145,13 +144,15 @@ def GetReleaseVer():
         
 def UpdateDslprivode(usname,pwd,useth):
     #os.chdir('/etc/ppp/peers')
-    print(os.getcwd())
+    #print(os.getcwd())
+    ueth="plugin rp-pppoe.so " + useth+"\n"
+    uname = "user \""+usname + "\""+"\n"
+    print("eth", ueth)
+    print("uname", uname)
     f = open("dsl-provider","r+")
     if (f):
         lines = f.readlines()
         ll = len(lines)
-        ueth="plugin rp-pppoe.so " + useth+"\n"
-        uname = "user \""+usname + "\"\n"
         bFindName = False
         bFindEth = False
         for x in range(0, ll):
@@ -170,26 +171,37 @@ def UpdateDslprivode(usname,pwd,useth):
         f.truncate()
         f.writelines(lines)    
     f.close()
-#    UpdateUserInfoFile("pap-secrets",usname,pwd)
-#    UpdateUserInfoFile("chap-secrets",usname,pwd)
-    
-#    os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
+ #   os.system('cp dsl-provider /etc/ppp/peers/dsl-provider')
+    UpdateUserInfoFile("pap-secrets",usname,pwd)
+    UpdateUserInfoFile("chap-secrets",usname,pwd)
+
 
 def Checkplog(cmd):
     print("log ",cmd )
-    os.system(cmd)
+#    os.system(cmd)
+#    ret=os.popen(cmd)
+#    print(ret.read())
+#    ret.close()
     #while (True):
+    bTimeout = False
     try:
-        ret = subprocess.Popen("plog")
+        # stdout =>输出重定向到管道
+        ret = subprocess.Popen("plog", shell=True,stdout=subprocess.PIPE)
+        #print(type(ret))
         ret.wait()
+        out=ret.stdout.readlines()
         #ret.close()
-        ret = repr(ret)
-        #print("ret",ret)
-    #except TimeoutExpired as e:
-    #    print("err timeout");
+        print('out lines:',len(out))
+        for i in range(0,len(out)):
+            if (out[i].find("Timeout") != -1):
+                bTimeout = True
+                break
     except OSError as e:
         print("error",e)
-
+    if (bTimeout):
+        print('log in timeout')
+    else:
+        print("error")
 
 def CheckStatus(cmd):
     ret = os.popen(cmd)
@@ -215,12 +227,12 @@ def StartPPPoE():
     
 
 def main():
-    usname = "web-19"#input("username:")
-    uspwd = "22"#input("pwd:")
-    useth = "eth1"#input("which ada used:")
+    usname = "web-09"#input("username:")
+    uspwd = "123"#input("pwd:")
+    useth = "eth0"#input("which ada used:")
     print("name", usname)
     print("pwd:",uspwd)
-    UpdateDslprivode(usname, uspwd, useth)
+#    UpdateDslprivode(usname, uspwd, useth)
 #    if (GetReleaseVer()):    
 #        UpdateConfFile(usname, uspwd, useth)
 #    else:
@@ -229,9 +241,9 @@ def main():
     
     #os.popen('./pppoe-start')
     
-    #if (StartPPPoE() == 0):
-    #    Checkplog("pon dsl-provider")
-    #    print("pon dsl-provider")
+    if (StartPPPoE() == 0):
+        Checkplog("pon dsl-provider")
+        print("pon dsl-provider")
 
 if (__name__ == "__main__"):
     main()
