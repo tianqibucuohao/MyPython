@@ -6,4 +6,4 @@ import webbrowser
 import subprocess
 #import skimage
 
-help(os.popen)
+help(cv2.Canny)
