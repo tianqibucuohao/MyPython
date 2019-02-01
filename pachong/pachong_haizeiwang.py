@@ -33,7 +33,9 @@ def getTxtFromFile(file):
     return tt
 #返回字符串：加载url页面
 def getTxtFromUrl(url):
-    f=urllib.request.urlopen(url)
+    req=urllib.request.Request(url)
+    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36')
+    f=urllib.request.urlopen(req)
     byt=f.read()
     f.close()
     #字符数组转字符串
@@ -105,39 +107,17 @@ def cutMagnet(url):
     s=Getsubstring(url, ">", "</")
     #print("sub url:%s" % s)
     return s
-#线程演示
-class MyThread():
-    def __init__(self, threadID, name, counter):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.counter = counter
-    def run(self):
-        print( "Starting " + self.name)
-       # 获得锁，成功获得锁定后返回True
-       # 可选的timeout参数不填时将一直阻塞直到获得锁定
-       # 否则超时后将返回False
-        threadLock.acquire()
-        print_time(self.name, self.counter, 3)
-        # 释放锁
-        threadLock.release()
- 
-def print_time(threadName, delay, counter):
-    while counter:
-        time.sleep(delay)
-        print("%s: %s" % (threadName, time.ctime(time.time())))
-        counter -= 1
        
 #正文代码
-os.chdir("f:\python")
+os.chdir("f:\mypython")
 mainurl=("https://share.dmhy.org/topics/list?keyword=%E6%B5%B7%E8%B4%BC%E7%8E%8B")
 host=cutUrlHost(mainurl)
-threadLock = threading.Lock()
+#threadLock = threading.Lock()
 i=0
-while (i<5):
+if (i<5):
     if (1):
-        ss=getTxtFromUrl(mainurl)
-        #saveTofile("a.txt", ss)
+        ss = getTxtFromUrl(mainurl)
+#        saveTofile("a.txt", ss)
     else:
         ss = getTxtFromFile("a.txt")
 
@@ -146,18 +126,19 @@ while (i<5):
     #ret=re.findall(r"*\D*#ONE\sPIECE\D*", ss)
     if (ret):
         print("ok!")
-    #ss=getTxtFromUrl(host+a)
-    #saveTofile("c.txt", ss)
+        print(ret[0])
     else:
         print("error find nothing")
+#    ss=getTxtFromUrl(host+a)
+#    saveTofile("c.txt", ss)
     saveTofile2("b.txt",ret, host)
-    #下一页 下一頁
-    ret=re.findall(r"\s*<a href=\"/topics/list\S*\"", ss, re.I)
-    print(len(ret))
-    if (ret):
-        print("ret[0]=%s" % ret[len(ret)-1] )
-        nextpage = host + Getsubstring(ret[len(ret)-1], "<a href=\"", "\"")
-        print("cuturl=%s" % nextpage)
-        mainurl=nextpage
-        i+=1
+#    #下一页 下一頁
+#    ret=re.findall(r"\s*<a href=\"/topics/list\S*\"", ss, re.I)
+#    print(len(ret))
+#    if (ret):
+#        print("ret[0]=%s" % ret[len(ret)-1] )
+#        nextpage = host + Getsubstring(ret[len(ret)-1], "<a href=\"", "\"")
+#        print("cuturl=%s" % nextpage)
+#        mainurl=nextpage
+#        i+=1
 del ret
