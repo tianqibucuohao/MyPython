@@ -11,7 +11,8 @@ Created on Thu Jan 17 16:29:43 2019
 import cv2 as cv
 
 def main():
-    img = cv.imread('blox.jpg')
+    img = cv.imread('sp.jpg')
+    print(type(img))
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     edge = cv.Canny(gray,100,150)
     mo='edge'

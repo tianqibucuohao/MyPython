@@ -12,7 +12,7 @@ tuple[:n] >> [0:n)
 import cv2 
 
 img = cv2.imread('bra.jpg')
-
+print(type(img))
 (w,h) = img.shape[:2]
 #help(img.shape)
 

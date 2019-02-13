@@ -10,7 +10,8 @@ import tkinter as tk
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.pack()
+        #self.pack()
+        self.grid()
         self.create_widgets()
 
     def create_widgets(self):
@@ -33,4 +34,6 @@ class Application(tk.Frame):
 
 root = tk.Tk()
 app = Application(master=root)
+app.master.title("hello")
+
 app.mainloop()
