@@ -9,13 +9,23 @@ Created on Thu Jan 17 16:29:43 2019
 侵蚀 erode
 膨胀 dilate
 位运算 bitwise_and,bitwise_or/xor/not
+旋转 getRotationMatrix2D
+高斯模糊 GaussianBlur
+矩形 rectangle
+圆形实心 circle
+直线 line
+文字 putText
+getPerspectiveTransform
+warpPerspective
+arcLength
+approxPolyDP
 """
 
 import cv2 as cv
 
 def main():
     img = cv.imread('sp.jpg')
-    print(type(img))
+    #print(type(img))
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     edge = cv.Canny(gray,30,150)
     mo='edge'
@@ -32,13 +42,13 @@ def main():
 #        cv.imshow("contours",outp)
 #        cv.waitkey(0)
     #print(contours0)
-    print(len(contours0))
+    #print(len(contours0))
     
     #cv.imshow('threshold',ts)
     mask = ts.copy()
     #mask = cv.erode(mask, None, iterations=5)
     mask = cv.dilate(mask, None, iterations=5)
-    output = cv.bitwise_and(img, img, mask=mask)
+    output = cv.bitwise_or(img, img, mask=mask)
     cv.imshow("Output", output)
     cv.imshow(mo,mask)
     cv.waitKey(0)

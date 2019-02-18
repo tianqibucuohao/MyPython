@@ -6,4 +6,4 @@ import webbrowser
 import subprocess
 #import skimage
 
-help(cv2.imread)
+help(cv2.resize)

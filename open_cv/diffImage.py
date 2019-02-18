@@ -6,7 +6,7 @@ Created on Fri Jan  4 15:00:04 2019
 
 compress image difference
 """
-
+# skimage 图像处理库
 import skimage
 import cv2
 import imutils
