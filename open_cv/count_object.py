@@ -22,6 +22,7 @@ approxPolyDP
 """
 
 import cv2 as cv
+from . import convenience
 
 def main():
     img = cv.imread('sp.jpg')
@@ -53,5 +54,13 @@ def main():
     cv.imshow(mo,mask)
     cv.waitKey(0)
 
+def test():
+    path = "20190218170703.png"
+    img = cv.imread(path)
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    gray = cv.GaussianBlur(gray, (5,5),0)
+    edged = cv.Canny(gray, 75, 200)
+    
+    
 if (__name__ == "__main__"):
     main()
