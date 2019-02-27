@@ -56,7 +56,7 @@ def read(conn, mask):
     if data:
         print('echoing', repr(data), 'to', conn)
         conn.send(data)  # Hope it won't block
-        req=Request(data)
+        req=Request(repr(data))
         print("headers:",req.headers())
         print("body:",req.form_body())
     else:
