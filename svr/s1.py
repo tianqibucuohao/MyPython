@@ -27,7 +27,7 @@ def main():
         sys.exit(1)
     conn, addr = s.accept()
     with conn:
-        print('Connected by', addr)
+        print('Connected by', addr, "from ",conn)
         while True:
             data = conn.recv(1024)
             if not data: break

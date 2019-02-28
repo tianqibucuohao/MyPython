@@ -4,10 +4,13 @@ import selectors
 import socket
 
 from urllib.parse import unquote, quote
+"""
 
+"""
 
 class Request:
     def __init__(self, r):
+        print('Request:',r)
         self.content = r
         self.method = r.split()[0]
         self.path = r.split()[1]
