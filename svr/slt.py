@@ -2,6 +2,7 @@
 
 import selectors
 import socket
+import json
 
 from urllib.parse import unquote, quote
 """
@@ -24,10 +25,14 @@ Request: b'GET /jwo/hoj/jojl/oooo?jowj=234&jowjo=9u9&ojo=&23jow=jo HTTP/1.1\r\nH
 content  <class 'str'> ,len= 485 ,method= GET , path= /jwo/hoj/jojl/oooo?jowj=234&jowjo=9u9&ojo=&23jow=jo
 httpheader:HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n
 """
+
 class Respone:
     def __init__(self, r):
-        pass
-
+        #不带content-length
+        self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONECTION: CLOSE\r\n\r\n"
+        #带content-length
+        #self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
+        self.contenttype='Content-Type: application/json; charset=utf-8'
 class Request:
     def __init__(self, r):
         print('Request:',r)
@@ -73,7 +78,12 @@ def accept(sock, mask):
     sel.register(conn, selectors.EVENT_READ, read)
 
 def read(conn, mask):
-    data = conn.recv(1024)  # Should be ready
+    data=''
+    try:
+        data = conn.recv(1024)  # Should be ready
+    except BlockingIOError:
+        print('')
+        
     if data:
         print('echoing', repr(data), 'to', conn)
         conn.send(data)  # Hope it won't block
@@ -84,6 +94,9 @@ def read(conn, mask):
         print('closing', conn)
         sel.unregister(conn)
         conn.close()
+        
+def dataProc(data):
+    rspHttp="HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
 
 sel = selectors.DefaultSelector()
 
