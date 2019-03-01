@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+风格移植
+opencv版
+"""
 
 import cv2 as cv
 file='1.jpg'
