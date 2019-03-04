@@ -3,6 +3,7 @@
 import selectors
 import socket
 import json
+import configparser
 
 from urllib.parse import unquote, quote
 """
@@ -26,6 +27,34 @@ content  <class 'str'> ,len= 485 ,method= GET , path= /jwo/hoj/jojl/oooo?jowj=23
 httpheader:HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n
 """
 
+class DrClientConfig:
+    def __init__(self):
+        self.bIsOpen = False
+        self.config = configparser.ConfigParser()
+    def load(self, file):
+        try:
+            if (self.bIsOpen == False):
+                self.config.read(file)
+        except IOError:
+            print("open file error")
+    def GetVersion(self):
+        ver = self.config.get('Ver', 'version')
+        print('ver',ver)
+        return ver
+    def GetTransError(self):
+        key = self.config.options('Trans')
+        #print((key))
+        dicts={}
+        for i in key:
+            dicts[i] = self.config.get('Trans', i)
+        print(dicts)
+    def CmpVersion(self, vers):
+        pass
+    def SetVersion(self, version):
+        pass
+    def SetTransError(self, data):
+        pass
+
 class Response:
     def __init__(self):
         #不带content-length
@@ -38,7 +67,7 @@ class Response:
     def GetResponse(self):
         res =self.respone.format(len(self.data),self.contenttype, self.data)
         #{self.contenttype, self.data})
-        return res
+        return res   
     
 class Request:
     def __init__(self, r):
@@ -112,24 +141,32 @@ def read(conn, mask):
 def dataProc(data):
     #rspHttp="HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
     pass
-    
 
 sel = selectors.DefaultSelector()
+    
+def main():
+   # global sel
+    sock = socket.socket()
+    sock.bind(('0.0.0.0', 8088))
+    sock.listen(100)
+    sock.setblocking(False)
+    sel.register(sock, selectors.EVENT_READ, accept)
+    
+    try:
+        while True:
+            events = sel.select()
+            for key, mask in events:
+                callback = key.data
+                print('key:',key)
+                callback(key.fileobj, mask)
+    except KeyboardInterrupt:
+        print('key board error')
+    finally:
+        sel.close()
 
-sock = socket.socket()
-sock.bind(('localhost', 8088))
-sock.listen(100)
-sock.setblocking(False)
-sel.register(sock, selectors.EVENT_READ, accept)
-
-try:
-    while True:
-        events = sel.select()
-        for key, mask in events:
-            callback = key.data
-            print('key:',key)
-            callback(key.fileobj, mask)
-except KeyboardInterrupt:
-    print('key board error')
-finally:
-    sel.close()
+if (__name__ == "__main__"):
+    #main()
+    conf=DrClientConfig()
+    conf.load('errTrans.ini')
+    conf.GetVersion()
+    conf.GetTransError()
