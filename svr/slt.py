@@ -31,16 +31,20 @@ class DrClientConfig:
     def __init__(self):
         self.bIsOpen = False
         self.config = configparser.ConfigParser()
+        self.filepath=''
     def load(self, file):
         try:
             if (self.bIsOpen == False):
+                self.filepath=file
                 self.config.read(file)
         except IOError:
             print("open file error")
+            
     def GetVersion(self):
-        ver = self.config.get('Ver', 'version')
-        print('ver',ver)
-        return ver
+        self.ver = self.config.get('Ver', 'version')
+        print('ver',self.ver)
+        return self.ver
+    
     def GetTransError(self):
         key = self.config.options('Trans')
         #print((key))
@@ -48,12 +52,33 @@ class DrClientConfig:
         for i in key:
             dicts[i] = self.config.get('Trans', i)
         print(dicts)
+        
     def CmpVersion(self, vers):
-        pass
+        vCurrent = self.ver.split('.')
+        vCmp = vers.split('.')
+        if (len(vCmp) != 3):
+            print("input param vers format error")
+            return -1
+        if (len(vCurrent) != 3):
+            print("remote version format error.Reset version.")
+            self.SetVersion("1.0.0")
+            vCurrent = "1.0.0"
+        vMF = vCurrent[0]
+        vCMF = vCmp[0]
+        if (vMF == vCMF):
+            pass
+            
+                
+        
+        
     def SetVersion(self, version):
+        self.config.set('Ver', 'version', version)
+        
+    def SetTransError(self, transKey, transData):
         pass
-    def SetTransError(self, data):
-        pass
+    
+    def SaveFile(self):
+        self.config.write(self.filepath)
 
 class Response:
     def __init__(self):
