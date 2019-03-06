@@ -52,7 +52,10 @@ class DrClientConfig:
         for i in key:
             dicts[i] = self.config.get('Trans', i)
         print(dicts)
-        
+        #obj = json.dumps(dicts,ensure_ascii=False)
+        #print("json:", obj)
+    
+    #1=版本完全相同，0需要更新文件    
     def CmpVersion(self, vers):
         vCurrent = self.ver.split('.')
         vCmp = vers.split('.')
@@ -66,9 +69,19 @@ class DrClientConfig:
         vMF = vCurrent[0]
         vCMF = vCmp[0]
         if (vMF == vCMF):
-            pass
-            
-                
+            vMF = vCurrent[1]
+            vCMF = vCmp[1]
+            if (vMF == vCMF):
+                vMF = vCurrent[2]
+                vCMF = vCmp[2]
+                if (vMF == vCMF):
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0               
         
         
     def SetVersion(self, version):
@@ -188,6 +201,22 @@ def main():
         print('key board error')
     finally:
         sel.close()
+        
+class CServer:
+    def __init__(self):
+        self.sel = selectors.DefaultSelector()
+        self.sock = socket.socket()
+        self.sock.bind(('0.0.0.0', 8088))
+        self.sock.listen(64)
+        self.sock.setblocking(False)
+        self.sel.register(self.sock, selectors.EVENT_READ, accept)
+        self.conf = DrClientConfig()
+        self.conf.load('errTrans.ini')
+    def accept(self, sock, mask):
+        conn, addr = self.sock.accept()  # Should be ready
+        print('accepted', conn, 'from', addr)
+        conn.setblocking(False)
+        self.sel.register(conn, selectors.EVENT_READ, read)         
 
 if (__name__ == "__main__"):
     #main()
@@ -195,3 +224,4 @@ if (__name__ == "__main__"):
     conf.load('errTrans.ini')
     conf.GetVersion()
     conf.GetTransError()
+    print(conf.CmpVersion("1.0.1"))
