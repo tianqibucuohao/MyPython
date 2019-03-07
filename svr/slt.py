@@ -61,7 +61,7 @@ class DrClientConfig:
             #print((key))
             for i in key:
                 dicts[i] = self.config.get('Trans', i)
-            print(dicts)
+            #print(dicts)
             #obj = json.dumps(dicts,ensure_ascii=False)
             #print("json:", obj)
         else:
@@ -113,17 +113,20 @@ class DrClientConfig:
         self.config.write(self.filepath)
 
 class Response:
-    def __init__(self, res):
+    def __init__(self):
         #不带content-length
         self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-LENGTH: {}\r\nCONTENT-TYPE: {}\r\nCONECTION: CLOSE\r\n\r\n{}"
         #带content-length
         #self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
         self.contenttype='application/json; charset=utf-8'
-        #obj = {"code":"001","account":"test","password":"123456","package_group_id":"1","serial_number":"20161111123433"}
-        self.data = json.dumps(res,ensure_ascii=False)
-        #print('self.data:', self.data)
-    def GetResponse(self):
-        res =self.respone.format(len(self.data),self.contenttype, self.data)
+
+    def GetResponse(self, ret, vers, trans):
+        data={}
+        data['ret'] = ret
+        data['ver'] = vers
+        data['data'] = trans
+        data = json.dumps(data, ensure_ascii=False)
+        res =self.respone.format(len(data),self.contenttype, data)
         #{self.contenttype, self.data})
         return res   
     
@@ -227,7 +230,9 @@ class CServer:
             self.conf = DrClientConfig()
             self.conf.load('errTrans.ini')
             self.ver = self.conf.GetVersion()
-            print("selfver:", self.ver)
+            self.transdata = self.conf.GetTransError()
+            self.resp = Response()
+            #print("selfver:", self.ver)
         except OSError as e:
             print("some error:", str(e))
         
@@ -248,20 +253,34 @@ class CServer:
                 #print('echoing', repr(data), 'to', conn)
                 #conn.send(data)  # Hope it won't block
                 req=Request(data.decode())
-                print("vers:",req.GetVersion())
+                #print("vers:",req.GetVersion())
                 rcv = req.GetVersion()
-                print("read self ver", self.ver)
-                print('cmp:',self.conf.CmpVersion(rcv))
-                if (self.conf.CmpVersion(req.GetVersion()) == 1):
-                    #版本一致
-                    res = Response({"ret":"OK"})
-                    print("res1:",res.GetResponse())
-                    conn.send(bytes(res.GetResponse(), encoding='utf-8'))
-                else:
-                    res = Response(self.conf.GetTransError())
-                    print("res2:",res.GetResponse())
-                    conn.send(bytes(res.GetResponse(), encoding='utf-8'))
-                    #print("body:",req.form_body())
+                #print("read self ver", self.ver)
+                #print('cmp:',self.conf.CmpVersion(rcv))
+                cmp = self.conf.CmpVersion(rcv)
+                ret = ''
+                ver = ''
+                data = ''
+                if (rcv == ''):
+                    ret = 'e02'#请求格式错误
+                elif(int(cmp) == 1):
+                    ret = 'ok'
+                elif(int(cmp) == 0):
+                    ret = 'e01'
+                    ver = self.ver
+                    data = self.transdata
+                resp = self.resp.GetResponse(ret, ver, data)
+                conn.send(bytes(resp, encoding='utf-8'))
+#                if (self.conf.CmpVersion(req.GetVersion()) == 1):
+#                    #版本一致
+#                    res = Response({"ret":"OK"})
+#                    print("res1:",res.GetResponse('ok','','')
+#                    conn.send(bytes(res.GetResponse('ok','',''), encoding='utf-8'))
+#                else:
+#                    res = Response(self.conf.GetTransError())
+#                    #print("res2:",res.GetResponse())
+#                    conn.send(bytes(res.GetResponse('e01', self.conf.GetVersion(), self.conf.GetTransError()), encoding='utf-8'))
+#                    #print("body:",req.form_body())
             else:
                 #print('closing', conn)
                 self.sel.unregister(conn)
