@@ -36,24 +36,34 @@ class DrClientConfig:
         try:
             if (self.bIsOpen == False):
                 self.filepath=file
+                #self.config.read_file(open(file, "rb"))
                 self.config.read(file)
+                self.bIsOpen = True
         except IOError:
             print("open file error")
+        except UnicodeDecodeError:
+            print("cannot read the file")
             
     def GetVersion(self):
-        self.ver = self.config.get('Ver', 'version')
-        print('ver',self.ver)
+        if(self.bIsOpen == True):
+            self.ver = self.config.get('Ver', 'version')
+            print('ver',self.ver)
         return self.ver
     
     def GetTransError(self):
-        key = self.config.options('Trans')
-        #print((key))
         dicts={}
-        for i in key:
-            dicts[i] = self.config.get('Trans', i)
-        print(dicts)
-        #obj = json.dumps(dicts,ensure_ascii=False)
-        #print("json:", obj)
+        if (self.bIsOpen == True):
+            key = self.config.options('Trans')
+            #print((key))
+            for i in key:
+                dicts[i] = self.config.get('Trans', i)
+            print(dicts)
+            #obj = json.dumps(dicts,ensure_ascii=False)
+            #print("json:", obj)
+        else:
+            print("pls load file first")
+        return dicts
+                
     
     #1=版本完全相同，0需要更新文件    
     def CmpVersion(self, vers):
@@ -94,14 +104,15 @@ class DrClientConfig:
         self.config.write(self.filepath)
 
 class Response:
-    def __init__(self):
+    def __init__(self, res):
         #不带content-length
         self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-LENGTH: {}\r\nCONTENT-TYPE: {}\r\nCONECTION: CLOSE\r\n\r\n{}"
         #带content-length
         #self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
         self.contenttype='application/json; charset=utf-8'
-        obj = {"code":"001","account":"test","password":"123456","package_group_id":"1","serial_number":"20161111123433"}
-        self.data = json.dumps(obj,ensure_ascii=False)
+        #obj = {"code":"001","account":"test","password":"123456","package_group_id":"1","serial_number":"20161111123433"}
+        self.data = json.dumps(res,ensure_ascii=False)
+        print('self.data:', self.data)
     def GetResponse(self):
         res =self.respone.format(len(self.data),self.contenttype, self.data)
         #{self.contenttype, self.data})
@@ -205,20 +216,23 @@ class CServer:
             data = conn.recv(1024)  # Should be ready
         except BlockingIOError:
             print('block io error')
+        try:    
+            if data:
+                print('echoing', repr(data), 'to', conn)
+                #conn.send(data)  # Hope it won't block
+                req=Request(data.decode())
+                print("headers:",req.GetHeaders())
+                res = Response(self.conf.GetTransError())
+                print("res:",res.GetResponse())
+                conn.send(bytes(res.GetResponse(), encoding='utf-8'))
+                #print("body:",req.form_body())
+            else:
+                print('closing', conn)
+                self.sel.unregister(conn)
+                conn.close()   
+        except AttributeError:
+            print('cannot read data')
             
-        if data:
-            print('echoing', repr(data), 'to', conn)
-            #conn.send(data)  # Hope it won't block
-            req=Request(data.decode())
-            print("headers:",req.GetHeaders())
-            res = Response()
-            print("res:",res.GetResponse())
-            conn.send(bytes(res.GetResponse(), encoding='utf-8'))
-            #print("body:",req.form_body())
-        else:
-            print('closing', conn)
-            self.sel.unregister(conn)
-            conn.close()   
     def run(self):
         try:
             while True:
