@@ -126,6 +126,7 @@ class Response:
         data['ver'] = vers
         data['data'] = trans
         data = json.dumps(data, ensure_ascii=False)
+        print('json:', data)
         res =self.respone.format(len(data),self.contenttype, data)
         #{self.contenttype, self.data})
         return res   
@@ -232,7 +233,7 @@ class CServer:
             self.ver = self.conf.GetVersion()
             self.transdata = self.conf.GetTransError()
             self.resp = Response()
-            #print("selfver:", self.ver)
+            #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
         
