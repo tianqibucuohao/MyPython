@@ -32,6 +32,7 @@ class DrClientConfig:
         self.bIsOpen = False
         self.config = configparser.ConfigParser()
         self.filepath=''
+        self.ver=''
     def load(self, file):
         try:
             if (self.bIsOpen == False):
@@ -39,6 +40,7 @@ class DrClientConfig:
                 #self.config.read_file(open(file, "rb"))
                 self.config.read(file)
                 self.bIsOpen = True
+                self.ver = self.GetVersion()
         except IOError:
             print("open file error")
         except UnicodeDecodeError:
@@ -47,9 +49,11 @@ class DrClientConfig:
     def GetVersion(self):
         if(self.bIsOpen == True):
             self.ver = self.config.get('Ver', 'version')
-            print('ver',self.ver)
-        return self.ver
-    
+            #print('ver=', self.ver)
+            return self.ver
+        else:
+            return "1.0.0"
+        
     def GetTransError(self):
         dicts={}
         if (self.bIsOpen == True):
@@ -67,8 +71,13 @@ class DrClientConfig:
     
     #1=版本完全相同，0需要更新文件    
     def CmpVersion(self, vers):
-        vCurrent = self.ver.split('.')
+        #print("vCmp:", vers)
         vCmp = vers.split('.')
+        #print('cmp:', vCmp)
+        #print("self vers:", self.ver,"type:", type(self.ver), "self get ver:", self.GetVersion())
+        vCurrent = self.ver.split('.')
+        #print("vCurrent:", vCurrent)
+       
         if (len(vCmp) != 3):
             print("input param vers format error")
             return -1
@@ -112,7 +121,7 @@ class Response:
         self.contenttype='application/json; charset=utf-8'
         #obj = {"code":"001","account":"test","password":"123456","package_group_id":"1","serial_number":"20161111123433"}
         self.data = json.dumps(res,ensure_ascii=False)
-        print('self.data:', self.data)
+        #print('self.data:', self.data)
     def GetResponse(self):
         res =self.respone.format(len(self.data),self.contenttype, self.data)
         #{self.contenttype, self.data})
@@ -120,23 +129,23 @@ class Response:
     
 class Request:
     def __init__(self, r):
-        print('Request:',r)
+        #print('Request:',r)
         try:
             #整个http内容
             self.content = r
             # GET /POST ..
             self.method = r.split(' ')[0]
             # /jojoj
-            self.path = r.split(' ')[1].split('?')[0]
+            self.path = (r.split(' ')[1].split('?')[0])[1:]
             # headers 
             self.header = self.GetHeaders()
             # ?ojo&wfe&wjo=wef&234
             self.pathParam=r.split()[1].split('?')[1].split('&')
             #print('path param:', self.pathParam)
             #self.param = self._parse_parmeter(self.pathParam)
-            print('method=', self.method
-                  ,', path=', self.path
-                  ,', param=', self.pathParam)
+#            print('method=', self.method
+#                  ,', path=', self.path
+#                  ,', param=', self.pathParam)
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
@@ -151,6 +160,19 @@ class Request:
             result[quote(k)] = quote(v)
         #print('result:',result)
         return result
+    def GetPath(self):
+        return self.path
+    
+    def GetVersion(self):
+        if (self.GetPath() != 'getvers'):
+            print("get path error")
+            return ''
+        parm = self.pathParam[0].split('=')[0]
+        vers = self.pathParam[0].split('=')[1]
+        if (parm != 'ver'):
+            print("parm error ", parm)
+            return ''
+        return vers
 
     def _parse_parmeter(parameters):
         args = parameters.split('&')
@@ -195,18 +217,23 @@ class Request:
         
 class CServer:
     def __init__(self):
-        self.sel = selectors.DefaultSelector()
-        self.sock = socket.socket()
-        self.sock.bind(('0.0.0.0', 8088))
-        self.sock.listen(64)
-        self.sock.setblocking(False)
-        self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
-        self.conf = DrClientConfig()
-        self.conf.load('errTrans.ini')
+        try:
+            self.sel = selectors.DefaultSelector()
+            self.sock = socket.socket()
+            self.sock.bind(('0.0.0.0', 8088))
+            self.sock.listen(64)
+            self.sock.setblocking(False)
+            self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
+            self.conf = DrClientConfig()
+            self.conf.load('errTrans.ini')
+            self.ver = self.conf.GetVersion()
+            print("selfver:", self.ver)
+        except OSError as e:
+            print("some error:", str(e))
         
     def accept(self, sock, mask):
         conn, addr = self.sock.accept()  # Should be ready
-        print('accepted', conn, 'from', addr)
+        #print('accepted', conn, 'from', addr)
         conn.setblocking(False)
         self.sel.register(conn, selectors.EVENT_READ, self.read) 
         
@@ -218,20 +245,29 @@ class CServer:
             print('block io error')
         try:    
             if data:
-                print('echoing', repr(data), 'to', conn)
+                #print('echoing', repr(data), 'to', conn)
                 #conn.send(data)  # Hope it won't block
                 req=Request(data.decode())
-                print("headers:",req.GetHeaders())
-                res = Response(self.conf.GetTransError())
-                print("res:",res.GetResponse())
-                conn.send(bytes(res.GetResponse(), encoding='utf-8'))
-                #print("body:",req.form_body())
+                print("vers:",req.GetVersion())
+                rcv = req.GetVersion()
+                print("read self ver", self.ver)
+                print('cmp:',self.conf.CmpVersion(rcv))
+                if (self.conf.CmpVersion(req.GetVersion()) == 1):
+                    #版本一致
+                    res = Response({"ret":"OK"})
+                    print("res1:",res.GetResponse())
+                    conn.send(bytes(res.GetResponse(), encoding='utf-8'))
+                else:
+                    res = Response(self.conf.GetTransError())
+                    print("res2:",res.GetResponse())
+                    conn.send(bytes(res.GetResponse(), encoding='utf-8'))
+                    #print("body:",req.form_body())
             else:
-                print('closing', conn)
+                #print('closing', conn)
                 self.sel.unregister(conn)
                 conn.close()   
-        except AttributeError:
-            print('cannot read data')
+        except AttributeError as e:
+            print('cannot read data:', str(e))
             
     def run(self):
         try:
@@ -251,6 +287,7 @@ class CServer:
 def main():
     svr = CServer()
     svr.run()
+    
 #   # global sel
 #    sock = socket.socket()
 #    sock.bind(('0.0.0.0', 8088))
