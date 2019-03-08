@@ -8,24 +8,6 @@ import os
 import logging
 from urllib.parse import unquote, quote
 """
-accepted <socket.socket fd=488, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 47984)> from ('127.0.0.1', 47984)
-echoing b'GET /holo?wejo=2oo&jwojo=jojo&1231 HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n' to <socket.socket fd=488, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 47984)>
-Request: b'GET /holo?wejo=2oo&jwojo=jojo&1231 HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n'
-Traceback (most recent call last):
-  File "F:\MyPython\svr\slt.py", line 80, in <module>
-    callback(key.fileobj, mask)
-  File "F:\MyPython\svr\slt.py", line 62, in read
-    req=Request(repr(data))
-  File "F:\MyPython\svr\slt.py", line 17, in __init__
-    self.body = r.split('\r\n\r\n', 1)[1]
-IndexError: list index out of range
-
-===========
-accepted <socket.socket fd=476, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 57133)> from ('127.0.0.1', 57133)
-echoing b'GET /jwo/hoj/jojl/oooo?jowj=234&jowjo=9u9&ojo=&23jow=jo HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n' to <socket.socket fd=464, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 57130)>
-Request: b'GET /jwo/hoj/jojl/oooo?jowj=234&jowjo=9u9&ojo=&23jow=jo HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n'
-content  <class 'str'> ,len= 485 ,method= GET , path= /jwo/hoj/jojl/oooo?jowj=234&jowjo=9u9&ojo=&23jow=jo
-httpheader:HTTP/1.1\r\nHost: 127.0.0.1:8088\r\nConnection: keep-alive\r\nCache-Control: max-age=0\r\nUpgrade-Insecure-Requests: 1\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\nAccept-Encoding: gzip, deflate, br\r\nAccept-Language: zh-CN,zh;q=0.9\r\n\r\n
 """
 
 class DrClientConfig:
@@ -122,14 +104,11 @@ class Response:
         data['ret'] = ret
         data['ver'] = vers
         data['data'] = trans
-#        print("trans:", trans)
         data = json.dumps(data, ensure_ascii=False)
         #print('json:', data)
-        #print('json len:', len(data))#len(data),
         bylen = len(bytes(data, encoding='utf-8'))
         #print("byte len:", len(bytes(data, encoding='utf-8')))
         res =self.respone.format(bylen,data)
-        #{self.contenttype, self.data})
         #print("res GetResponse:", len(res), ", data=", res)
         return res   
     
@@ -147,11 +126,8 @@ class Request:
         try:
             # GET /POST ..
             self.method = self.content.split(' ')[0]
-            # /jojoj
-            self.path = (self.content.split(' ')[1].split('?')[0])[1:]
-            # headers 
             self.header = self.GetHeaders()
-            # ?ojo&wfe&wjo=wef&234
+            self.path = (self.content.split(' ')[1].split('?')[0])[1:]
             self.pathParam=self.content.split()[1].split('?')[1].split('&')
             #print('path param:', self.pathParam)
             #self.param = self._parse_parmeter(self.pathParam)
