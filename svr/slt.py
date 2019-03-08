@@ -111,11 +111,11 @@ class DrClientConfig:
 
 class Response:
     def __init__(self):
-        #不带content-length
-        self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-LENGTH: {}\r\nCONTENT-TYPE: {}\r\nCONECTION: CLOSE\r\n\r\n{}"
         #带content-length
-        #self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
-        self.contenttype='application/json; charset=utf-8'
+        self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-LENGTH: {}\r\nCONTENT-TYPE: application/json; charset=utf-8\r\nCONECTION: CLOSE\r\n\r\n{}"
+        #不带content-length
+        #self.respone = "HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nC\r\nCONTENT-TYPE: application/json; charset=utf-8\r\nCONECTION: CLOSE\r\n\r\n{}"
+        #self.contenttype='application/json; charset=utf-8'
 
     def GetResponse(self, ret, vers, trans):
         data={}
@@ -125,8 +125,10 @@ class Response:
 #        print("trans:", trans)
         data = json.dumps(data, ensure_ascii=False)
         #print('json:', data)
-        #print('json len:', len(data))
-        res =self.respone.format(len(data),self.contenttype, data)
+        #print('json len:', len(data))#len(data),
+        bylen = len(bytes(data, encoding='utf-8'))
+        #print("byte len:", len(bytes(data, encoding='utf-8')))
+        res =self.respone.format(bylen,data)
         #{self.contenttype, self.data})
         #print("res GetResponse:", len(res), ", data=", res)
         return res   
@@ -134,26 +136,35 @@ class Response:
 class Request:
     def __init__(self, r):
 #        print('Request:',r)
+        #整个http内容
+        self.content = r
+        self.header = ''
+        self.method = ''
+        self.path = ''
+        self.pathParam = ''
+
+    def parse(self):
         try:
-            #整个http内容
-            self.content = r
             # GET /POST ..
-            self.method = r.split(' ')[0]
+            self.method = self.content.split(' ')[0]
             # /jojoj
-            self.path = (r.split(' ')[1].split('?')[0])[1:]
+            self.path = (self.content.split(' ')[1].split('?')[0])[1:]
             # headers 
             self.header = self.GetHeaders()
             # ?ojo&wfe&wjo=wef&234
-            self.pathParam=r.split()[1].split('?')[1].split('&')
+            self.pathParam=self.content.split()[1].split('?')[1].split('&')
             #print('path param:', self.pathParam)
             #self.param = self._parse_parmeter(self.pathParam)
-#            print('method=', self.method
-#                  ,', path=', self.path
-#                  ,', param=', self.pathParam)
+            print('method=', self.method
+                  ,', path=', self.path
+                  ,', param=', self.pathParam)
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
             print("index error")
+        except ... :
+            return 0
+        return 1
 
     def GetHeaders(self):
         header_content = self.content.split('\r\n\r\n')[0].split('\r\n')[1:]
@@ -222,54 +233,73 @@ class CServer:
         #print("accept mask=", mask)
         conn.setblocking(False)
         self.sel.register(conn, selectors.EVENT_READ, self.read) 
+    
+    """
+    异步处理，暂时用不上
+    """    
+    def write(self, conn, mask):
+        data = ''
+        try:
+            if (conn):
+                data = conn.recv(1024)
+        except BlockingIOError:
+            print('write block io error')
+        if (data):
+            print('write recv data:', data)
+        self.sel.unregister(conn)
+        conn.close()
         
     def read(self, conn, mask):
         #print('read mask:', mask)
         data=''
         try:
-            data = conn.recv(1024)  # Should be ready
+            if (conn):
+                data = conn.recv(1024)  # Should be ready
         except BlockingIOError:
             print('block io error')
         try:    
-            if data:
-                #print('echoing', repr(data), 'to', conn)
-                #conn.send(data)  # Hope it won't block
+            if (data):
                 req=Request(data.decode())
-                #print("vers:",req.GetVersion())
-                rcv = req.GetVersion()
-                #print("read self ver", self.ver)
-                #print('cmp:',self.conf.CmpVersio.n(rcv))
-                cmp = self.conf.CmpVersion(rcv)
-                ret = ''
-                ver = ''
-                data = ''
-                if (rcv == ''):
-                    ret = 'e02'#请求格式错误
-                elif(int(cmp) == 1):
-                    ret = 'ok'
-                elif(int(cmp) == 0):
-                    ret = 'e01'
-                    ver = self.ver
-                    data = self.transdata
-                elif(int(cmp) == -1):
-                    ret = 'e02'
-                resp = self.resp.GetResponse(ret, ver, data)
-                print("resp", resp)
-                print("response len=", len(resp))
-                senddata = bytes(resp, encoding='utf-8')
-                print("send data", senddata)
-                print("send data len=", len(senddata))
-                if (conn):
-                    conn.send(senddata)
-            else:
-                if (conn):
-                    print('closing', conn)
-                    self.sel.unregister(conn)
-                    conn.close()   
+                req.parse()
+                if (req.path == 'getvers'):
+                    rcv = req.GetVersion()
+                    #print("read self ver", self.ver)
+                    #print('cmp:',self.conf.CmpVersio.n(rcv))
+                    cmp = self.conf.CmpVersion(rcv)
+                    ret = ''
+                    ver = ''
+                    data = ''
+                    if (rcv == ''):
+                        ret = 'e02'#请求格式错误
+                    elif(int(cmp) == 1):
+                        ret = 'ok'
+                    elif(int(cmp) == 0):
+                        ret = 'e01'
+                        ver = self.ver
+                        data = self.transdata
+                    elif(int(cmp) == -1):
+                        ret = 'e02'
+                    resp = self.resp.GetResponse(ret, ver, data)
+                    #print("resp", resp)
+                    #print("response len=", len(resp))
+                    senddata = bytes(resp, encoding='utf-8')
+                    #print("send data", senddata)
+                    #print("send data len=", len(senddata))
+                    conn.send(senddata)  
+                elif (req.path == 'upvers'):
+                    
+#                elif (req.method == 'POST'):
+                    # 异步处理接收，暂用不上
+#                    conn = self.sel.modify(conn, selectors.EVENT_WRITE, self.write)
+#            else:
+#                print('closing=>', conn)
+#                self.sel.unregister(conn)
+#                conn.close()   
         except AttributeError as e:
             print('cannot read data:', str(e))
         finally:
             if (conn):
+                print('closing=>', conn)
                 self.sel.unregister(conn)
                 conn.close()
             
