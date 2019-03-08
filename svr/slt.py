@@ -126,6 +126,7 @@ class Response:
         data['data'] = trans
         data = json.dumps(data, ensure_ascii=False)
         print('json:', data)
+        print('json len:', len(data))
         res =self.respone.format(len(data),self.contenttype, data)
         #{self.contenttype, self.data})
         return res   
@@ -184,39 +185,6 @@ class Request:
             k, v = arg.split('=')
             query[k] = unquote(v)
         return query
-    
-#def accept(sock, mask):
-#    conn, addr = sock.accept()  # Should be ready
-#    print('accepted', conn, 'from', addr)
-#    conn.setblocking(False)
-#    sel.register(conn, selectors.EVENT_READ, read)
-#
-#def read(conn, mask):
-#    data=''
-#    try:
-#        data = conn.recv(1024)  # Should be ready
-#    except BlockingIOError:
-#        print('')
-#        
-#    if data:
-#        print('echoing', repr(data), 'to', conn)
-#        #conn.send(data)  # Hope it won't block
-#        req=Request(data.decode())
-#        print("headers:",req.GetHeaders())
-#        res = Response()
-#        print("res:",res.GetResponse())
-#        conn.send(bytes(res.GetResponse(), encoding='utf-8'))
-#        #print("body:",req.form_body())
-#    else:
-#        print('closing', conn)
-#        sel.unregister(conn)
-#        conn.close()
-#        
-#def dataProc(data):
-#    #rspHttp="HTTP/1.0 200 OK\r\nSERVER: Dr.COM VER SERVER\r\nCONTENT-TYPE: %s\r\nCONTENT-LENGTH: %d\r\nCONECTION: CLOSE\r\n\r\n"
-#    pass
-#
-
         
 class CServer:
     def __init__(self):
@@ -226,6 +194,7 @@ class CServer:
             self.sock.bind(('0.0.0.0', 8088))
             self.sock.listen(64)
             self.sock.setblocking(False)
+            self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
             self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
             self.conf = DrClientConfig()
             self.conf.load('errTrans.ini')
@@ -239,10 +208,12 @@ class CServer:
     def accept(self, sock, mask):
         conn, addr = self.sock.accept()  # Should be ready
         #print('accepted', conn, 'from', addr)
+        print("accept mask=", mask)
         conn.setblocking(False)
         self.sel.register(conn, selectors.EVENT_READ, self.read) 
         
     def read(self, conn, mask):
+        print('read mask:', mask)
         data=''
         try:
             data = conn.recv(1024)  # Should be ready
@@ -256,7 +227,7 @@ class CServer:
                 #print("vers:",req.GetVersion())
                 rcv = req.GetVersion()
                 #print("read self ver", self.ver)
-                #print('cmp:',self.conf.CmpVersion(rcv))
+                #print('cmp:',self.conf.CmpVersio.n(rcv))
                 cmp = self.conf.CmpVersion(rcv)
                 ret = ''
                 ver = ''
@@ -269,6 +240,8 @@ class CServer:
                     ret = 'e01'
                     ver = self.ver
                     data = self.transdata
+                elif(int(cmp) == -1):
+                    ret = 'e02'
                 resp = self.resp.GetResponse(ret, ver, data)
                 conn.send(bytes(resp, encoding='utf-8'))
 #                if (self.conf.CmpVersion(req.GetVersion()) == 1):
@@ -287,6 +260,9 @@ class CServer:
                 conn.close()   
         except AttributeError as e:
             print('cannot read data:', str(e))
+        finally:
+            self.sel.unregister(conn)
+            conn.close()
             
     def run(self):
         try:
@@ -295,36 +271,16 @@ class CServer:
                 for key, mask in events:
                     callback = key.data
                     print('key:',key)
+                    print('evnts:',events, ', maks=', mask)
                     callback(key.fileobj, mask)
         except KeyboardInterrupt:
             print('key board error')
         finally:
             self.sel.close()
-
-#sel = selectors.DefaultSelector()
-#    
+ 
 def main():
     svr = CServer()
     svr.run()
-    
-#   # global sel
-#    sock = socket.socket()
-#    sock.bind(('0.0.0.0', 8088))
-#    sock.listen(100)
-#    sock.setblocking(False)
-#    sel.register(sock, selectors.EVENT_READ, accept)
-#    
-#    try:
-#        while True:
-#            events = sel.select()
-#            for key, mask in events:
-#                callback = key.data
-#                print('key:',key)
-#                callback(key.fileobj, mask)
-#    except KeyboardInterrupt:
-#        print('key board error')
-#    finally:
-#        sel.close()
 
 if (__name__ == "__main__"):
     print(os.getcwd())
