@@ -5,6 +5,7 @@ import socket
 import json
 import configparser
 import os
+import logging
 from urllib.parse import unquote, quote
 """
 accepted <socket.socket fd=488, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 47984)> from ('127.0.0.1', 47984)
@@ -70,10 +71,8 @@ class DrClientConfig:
     
     #1=版本完全相同，0需要更新文件    
     def CmpVersion(self, vers):
-        #print("vCmp:", vers)
         vCmp = vers.split('.')
         #print('cmp:', vCmp)
-        #print("self vers:", self.ver,"type:", type(self.ver), "self get ver:", self.GetVersion())
         vCurrent = self.ver.split('.')
         #print("vCurrent:", vCurrent)
        
@@ -99,8 +98,7 @@ class DrClientConfig:
             else:
                 return 0
         else:
-            return 0               
-        
+            return 0                     
         
     def SetVersion(self, version):
         self.config.set('Ver', 'version', version)
@@ -124,16 +122,18 @@ class Response:
         data['ret'] = ret
         data['ver'] = vers
         data['data'] = trans
+#        print("trans:", trans)
         data = json.dumps(data, ensure_ascii=False)
-        print('json:', data)
-        print('json len:', len(data))
+        #print('json:', data)
+        #print('json len:', len(data))
         res =self.respone.format(len(data),self.contenttype, data)
         #{self.contenttype, self.data})
+        #print("res GetResponse:", len(res), ", data=", res)
         return res   
     
 class Request:
     def __init__(self, r):
-        #print('Request:',r)
+#        print('Request:',r)
         try:
             #整个http内容
             self.content = r
@@ -201,19 +201,30 @@ class CServer:
             self.ver = self.conf.GetVersion()
             self.transdata = self.conf.GetTransError()
             self.resp = Response()
+#            self.log = logging.getLogger(__name__)
             #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
+#    def Init(self):
+#        self.log.setLevel(level = logging.INFO)
+#        handler = logging.FileHandler("log.txt")
+#        handler.setLevel(logging.DEBUG)
+#        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#        handler.setFormatter(formatter)
+#        console = logging.StreamHandler()
+#        console.setLevel(logging.INFO)
+#        self.log.addHandler(handler)
+#        self.log.addHandler(console)
         
     def accept(self, sock, mask):
         conn, addr = self.sock.accept()  # Should be ready
         #print('accepted', conn, 'from', addr)
-        print("accept mask=", mask)
+        #print("accept mask=", mask)
         conn.setblocking(False)
         self.sel.register(conn, selectors.EVENT_READ, self.read) 
         
     def read(self, conn, mask):
-        print('read mask:', mask)
+        #print('read mask:', mask)
         data=''
         try:
             data = conn.recv(1024)  # Should be ready
@@ -243,26 +254,24 @@ class CServer:
                 elif(int(cmp) == -1):
                     ret = 'e02'
                 resp = self.resp.GetResponse(ret, ver, data)
-                conn.send(bytes(resp, encoding='utf-8'))
-#                if (self.conf.CmpVersion(req.GetVersion()) == 1):
-#                    #版本一致
-#                    res = Response({"ret":"OK"})
-#                    print("res1:",res.GetResponse('ok','','')
-#                    conn.send(bytes(res.GetResponse('ok','',''), encoding='utf-8'))
-#                else:
-#                    res = Response(self.conf.GetTransError())
-#                    #print("res2:",res.GetResponse())
-#                    conn.send(bytes(res.GetResponse('e01', self.conf.GetVersion(), self.conf.GetTransError()), encoding='utf-8'))
-#                    #print("body:",req.form_body())
+                print("resp", resp)
+                print("response len=", len(resp))
+                senddata = bytes(resp, encoding='utf-8')
+                print("send data", senddata)
+                print("send data len=", len(senddata))
+                if (conn):
+                    conn.send(senddata)
             else:
-                #print('closing', conn)
-                self.sel.unregister(conn)
-                conn.close()   
+                if (conn):
+                    print('closing', conn)
+                    self.sel.unregister(conn)
+                    conn.close()   
         except AttributeError as e:
             print('cannot read data:', str(e))
         finally:
-            self.sel.unregister(conn)
-            conn.close()
+            if (conn):
+                self.sel.unregister(conn)
+                conn.close()
             
     def run(self):
         try:
@@ -270,8 +279,9 @@ class CServer:
                 events = self.sel.select()
                 for key, mask in events:
                     callback = key.data
-                    print('key:',key)
-                    print('evnts:',events, ', maks=', mask)
+                    #print('key:',key)
+#                    self.log.debug(key)
+                    #print('evnts:',events, ', maks=', mask)
                     callback(key.fileobj, mask)
         except KeyboardInterrupt:
             print('key board error')
