@@ -263,7 +263,7 @@ class CServer:
                     #print("send data len=", len(senddata))
                     conn.send(senddata)  
                 elif (req.path == 'upvers'):
-                    
+                    print("upvers")
 #                elif (req.method == 'POST'):
                     # 异步处理接收，暂用不上
 #                    conn = self.sel.modify(conn, selectors.EVENT_WRITE, self.write)
