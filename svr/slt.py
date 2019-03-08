@@ -4,7 +4,7 @@ import selectors
 import socket
 import json
 import configparser
-
+import os
 from urllib.parse import unquote, quote
 """
 accepted <socket.socket fd=488, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 8088), raddr=('127.0.0.1', 47984)> from ('127.0.0.1', 47984)
@@ -37,8 +37,7 @@ class DrClientConfig:
         try:
             if (self.bIsOpen == False):
                 self.filepath=file
-                #self.config.read_file(open(file, "rb"))
-                self.config.read(file)
+                self.config.read(file, encoding='utf-8-sig')
                 self.bIsOpen = True
                 self.ver = self.GetVersion()
         except IOError:
@@ -328,6 +327,7 @@ def main():
 #        sel.close()
 
 if (__name__ == "__main__"):
+    print(os.getcwd())
     main()
 #    conf=DrClientConfig()
 #    conf.load('errTrans.ini')
