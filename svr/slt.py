@@ -5,9 +5,10 @@ import socket
 import json
 import configparser
 import os
-import logging
+#import logging
 from urllib.parse import unquote, quote
 """
+
 """
 
 class DrClientConfig:
@@ -82,8 +83,23 @@ class DrClientConfig:
         else:
             return 0                     
         
-    def SetVersion(self, version):
-        self.config.set('Ver', 'version', version)
+    def SetVersion(self):
+        vCurrent = self.ver.split('.')
+        if (len(vCurrent)!=3):
+            print("DrClientConfig versino error.reset version")
+            vCurrent = self.ver= "1.0.0"
+        if (int(vCurrent[2]) == 9):
+            vCurrent[2] = 0
+            if (int(vCurrent[1] == 9)):
+                vCurrent[1] = int(vCurrent[2])+1
+                vCurrent[0] = int(vCurrent[2])+1
+            else:
+                vCurrent[1] = int(vCurrent[2])+1
+        else:
+            vCurrent[2] = int(vCurrent[2])+1
+        self.ver.format("%d.%d.%d", int(vCurrent[0]), int(vCurrent[1]), int(vCurrent[2]))
+        print(self.ver)
+        self.config.set('Ver', 'version', self.ver)
         
     def SetTransError(self, transKey, transData):
         pass
@@ -263,7 +279,7 @@ class CServer:
                     #print("send data len=", len(senddata))
                     conn.send(senddata)  
                 elif (req.path == 'upvers'):
-                    
+                    print("upvers")
 #                elif (req.method == 'POST'):
                     # 异步处理接收，暂用不上
 #                    conn = self.sel.modify(conn, selectors.EVENT_WRITE, self.write)
@@ -300,9 +316,10 @@ def main():
 
 if (__name__ == "__main__"):
     print(os.getcwd())
-    main()
-#    conf=DrClientConfig()
-#    conf.load('errTrans.ini')
-#    conf.GetVersion()
-#    conf.GetTransError()
+#    main()
+    conf=DrClientConfig()
+    conf.load('errTrans.ini')
+    conf.GetVersion()
+    conf.GetTransError()
+    conf.SetVersion()
 #    print(conf.CmpVersion("1.0.1"))
