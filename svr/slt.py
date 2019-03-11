@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #select mode
 
 import selectors
@@ -83,35 +82,24 @@ class DrClientConfig:
                 return 0
         else:
             return 0                     
-    
-    """
-    格式化字符有问题
-    """    
+        
     def SetVersion(self):
-        #print("self version:", self.ver)
         vCurrent = self.ver.split('.')
-        print(vCurrent)
         if (len(vCurrent)!=3):
             print("DrClientConfig versino error.reset version")
             vCurrent = self.ver= "1.0.0"
-        if (int(vCurrent[2]) == '9'):
-            vCurrent[2] = '0'
-            if (int(vCurrent[1] == '9')):
-                vCurrent[1] = '0'#repr(int(vCurrent[1])+1)
-                vCurrent[0] = repr(int(vCurrent[0])+1)
+        if (int(vCurrent[2]) == 9):
+            vCurrent[2] = 0
+            if (int(vCurrent[1] == 9)):
+                vCurrent[1] = int(vCurrent[2])+1
+                vCurrent[0] = int(vCurrent[2])+1
             else:
-                vCurrent[1] = repr(int(vCurrent[2])+1)
+                vCurrent[1] = int(vCurrent[2])+1
         else:
-            vCurrent[2] = repr(int(vCurrent[2])+1)
-            #print(vCurrent[2])
-        print(vCurrent)
-#        self.ver = "{0[0]}{0[1]}{0[2]}"
- #       self.ver.format(vCurrent)
-        #self.ver.format(int(vCurrent[0]), int(vCurrent[1]), int(vCurrent[2]))
-        #self.ver=""
-        self.ver.join(vCurrent)
+            vCurrent[2] = int(vCurrent[2])+1
+        self.ver.format("%d.%d.%d", int(vCurrent[0]), int(vCurrent[1]), int(vCurrent[2]))
         print(self.ver)
-        #self.config.set('Ver', 'version', vCurrent)
+        self.config.set('Ver', 'version', self.ver)
         
     def SetTransError(self, transKey, transData):
         pass
