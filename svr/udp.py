@@ -7,6 +7,11 @@ Created on Fri Dec  7 11:23:19 2018
 """
 
 import socket
+import signal
+
+def finished(signum, frame):
+    print('Signal handler called with signal', signum)
+    raise OSError("Couldn't open device!")
 
 def main():
     HOST = '0.0.0.0'  
@@ -22,4 +27,5 @@ def main():
     s.close()  
 
 if (__name__ == "__main__"):
+    signal.signal(signal.SIGINT, finished)
     main()
