@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #select mode
 
 import selectors
@@ -97,8 +98,8 @@ class DrClientConfig:
                 vCurrent[1] = int(vCurrent[2])+1
         else:
             vCurrent[2] = int(vCurrent[2])+1
-        self.ver.format("%d.%d.%d", int(vCurrent[0]), int(vCurrent[1]), int(vCurrent[2]))
-        print(self.ver)
+        #self.ver.format("%d.%d.%d", int(vCurrent[0]), int(vCurrent[1]), int(vCurrent[2]))
+        #print(self.ver)
         self.config.set('Ver', 'version', self.ver)
         
     def SetTransError(self, transKey, transData):
