@@ -10,9 +10,11 @@ def saveHtml(filename, html):
 
 #os.chdir("f:\python")
 try:
-    url="http://192.168.54.37:8088/getvers?ver=1.1.1"
+    url="http://192.168.54.37:8088/getvers?ver=1.2.1"
     html=urllib.request.urlopen(url)
-    print(html)
+    byt = html.read()
+    html.close()
+    print(byt)
 #except RemoteDisconnected as e:
 #    print(str(e))
 except ...:

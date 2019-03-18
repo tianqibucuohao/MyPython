@@ -6,8 +6,10 @@ import socket
 import json
 import configparser
 import os
+import argparse
 #import logging
 from urllib.parse import unquote, quote
+
 """
 
 """
@@ -317,10 +319,10 @@ def main():
 
 if (__name__ == "__main__"):
     print(os.getcwd())
-#    main()
-    conf=DrClientConfig()
-    conf.load('errTrans.ini')
-    conf.GetVersion()
-    conf.GetTransError()
-    conf.SetVersion()
+    #main()
+#    conf=DrClientConfig()
+#    conf.load('errTrans.ini')
+#    conf.GetVersion()
+#    conf.GetTransError()
+#    conf.SetVersion()
 #    print(conf.CmpVersion("1.0.1"))
