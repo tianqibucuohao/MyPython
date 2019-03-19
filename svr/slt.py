@@ -197,11 +197,7 @@ class CServer:
         try:
             self.sel = selectors.DefaultSelector()
             self.sock = socket.socket()
-            self.sock.bind(('0.0.0.0', 8088))
-            self.sock.listen(64)
-            self.sock.setblocking(False)
-            self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
-            self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
+            
             self.conf = DrClientConfig()
             self.conf.load('errTrans.ini')
             self.ver = self.conf.GetVersion()
@@ -221,6 +217,12 @@ class CServer:
 #        console.setLevel(logging.INFO)
 #        self.log.addHandler(handler)
 #        self.log.addHandler(console)
+    def SetServer(self, ip, port):
+        self.sock.bind((ip, port))
+        self.sock.listen(64)
+        self.sock.setblocking(False)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
+        self.sel.register(self.sock, selectors.EVENT_READ, self.accept)
         
     def accept(self, sock, mask):
         conn, addr = self.sock.accept()  # Should be ready
@@ -312,14 +314,37 @@ class CServer:
             print('key board error')
         finally:
             self.sel.close()
+            
+def argc()            :
+    parser = argparse.ArgumentParser(description='User-defined Translation Services')
+    parser.add_argument('-i'
+                        , metavar='IP ADDRESS'
+                        ,type=str,default='0.0.0.0'
+                        ,required=False
+                        ,help='bind address,default 0.0.0.0')
+    parser.add_argument('-p'
+                        , metavar='POET'
+                        , type=int
+                        ,default='8088'
+                        ,required=False
+                        , help='port,default 8088')
+    #parser.add_argument('--sum', dest='accumulate', action='store_const',
+    #                    const=sum, default=max,
+    #                    help='sum the integers (default: find the max)')
+    
+    args = parser.parse_args()
+    return args.i, args.p
  
 def main():
+    ipaddr,port = argc()
+    print('ipaddr:', ipaddr, ', port=', port)
     svr = CServer()
+    svr.SetServer(ipaddr, port)
     svr.run()
-
+    
 if (__name__ == "__main__"):
-    print(os.getcwd())
-    #main()
+    #print(os.getcwd())
+    main()
 #    conf=DrClientConfig()
 #    conf.load('errTrans.ini')
 #    conf.GetVersion()

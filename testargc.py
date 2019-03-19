@@ -27,5 +27,6 @@ parser.add_argument('-p'
 
 args = parser.parse_args()
 print(args.i)
+print(args.p)
 
 #print(args.accumulate(args.integers))
