@@ -123,6 +123,8 @@ class Response:
         data['ret'] = ret
         data['ver'] = vers
         data['data'] = trans
+#        info = list(data)
+#        print(info)
         data = json.dumps(data, ensure_ascii=False)
         #print('json:', data)
         bylen = len(bytes(data, encoding='utf-8'))
@@ -150,9 +152,9 @@ class Request:
             self.pathParam=self.content.split()[1].split('?')[1].split('&')
             #print('path param:', self.pathParam)
             #self.param = self._parse_parmeter(self.pathParam)
-            print('method=', self.method
-                  ,', path=', self.path
-                  ,', param=', self.pathParam)
+#            print('method=', self.method
+#                  ,', path=', self.path
+#                  ,', param=', self.pathParam)
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
@@ -296,7 +298,7 @@ class CServer:
             print('cannot read data:', str(e))
         finally:
             if (conn):
-                print('closing=>', conn)
+#                print('closing=>', conn)
                 self.sel.unregister(conn)
                 conn.close()
             
