@@ -122,7 +122,8 @@ class Response:
         data={}
         data['ret'] = ret
         data['ver'] = vers
-        data['data'] = trans
+        data['data'] = list()
+        data['data'].append(trans)
 #        info = list(data)
 #        print(info)
         data = json.dumps(data, ensure_ascii=False)
