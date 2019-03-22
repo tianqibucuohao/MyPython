@@ -210,16 +210,6 @@ class CServer:
             #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
-#    def Init(self):
-#        self.log.setLevel(level = logging.INFO)
-#        handler = logging.FileHandler("log.txt")
-#        handler.setLevel(logging.DEBUG)
-#        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-#        handler.setFormatter(formatter)
-#        console = logging.StreamHandler()
-#        console.setLevel(logging.INFO)
-#        self.log.addHandler(handler)
-#        self.log.addHandler(console)
     def SetServer(self, ip, port):
         self.sock.bind((ip, port))
         self.sock.listen(64)
@@ -318,7 +308,7 @@ class CServer:
         finally:
             self.sel.close()
             
-def argc()            :
+def argc():
     parser = argparse.ArgumentParser(description='User-defined Translation Services')
     parser.add_argument('-i'
                         , metavar='IP ADDRESS'
