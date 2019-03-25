@@ -48,7 +48,12 @@ class DrClientConfig:
             
     def GetVersion(self):
         if(self.bIsOpen == True):
-            self.ver = self.config.get('Ver', 'version')
+            try:
+                self.ver = self.config.get('Ver', 'version')
+            except configparser.NoSectionError:
+                print("read file error.Cannot read vers section")    
+                self.ver = "1.0.0"
+                self.bIsOpen = False
             #print('ver=', self.ver)
             return self.ver
         else:
@@ -57,17 +62,21 @@ class DrClientConfig:
     def GetTransError(self):
         dicts={}
         if (self.bIsOpen == True):
-            key = self.config.options('Trans')
-            #print((key))
-            for i in key:
-                dicts[i] = self.config.get('Trans', i)
+            try:
+                key = self.config.options('Trans')
+                #print((key))
+                for i in key:
+                    dicts[i] = self.config.get('Trans', i)
+            except configparser.NoSectionError:
+                print("read file error.Cannot read transerror section")    
+                self.bIsOpen = False
+            return dicts    
             #print(dicts)
             #obj = json.dumps(dicts,ensure_ascii=False)
             #print("json:", obj)
         else:
             print("pls load file first")
-        return dicts
-                
+        return dicts               
     
     #1=版本完全相同，0需要更新文件    
     def CmpVersion(self, vers):
@@ -214,17 +223,22 @@ class CServer:
         try:
             self.sel = selectors.DefaultSelector()
             self.sock = socket.socket()
-            
             self.conf = DrClientConfig()
-            self.conf.load('errTrans.ini')
-            self.ver = self.conf.GetVersion()
-            self.transdata = self.conf.GetTransError()
             self.resp = Response()
             self.log = Logger()
 #            self.log = logging.getLogger(__name__)
             #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
+    def LoadConfig(self, path):
+        try:
+            self.conf.load(path)
+            self.ver = self.conf.GetVersion()
+            self.transdata = self.conf.GetTransError()
+        except ...:
+            self.log.infoLog('read file format error')
+        return self.conf.bIsOpen
+        
     def SetServer(self, ip, port):
         self.sock.bind((ip, port))
         self.sock.listen(64)
@@ -338,19 +352,25 @@ def argc():
                         ,default='8088'
                         ,required=False
                         , help='port,default 8088')
-    #parser.add_argument('--sum', dest='accumulate', action='store_const',
-    #                    const=sum, default=max,
-    #                    help='sum the integers (default: find the max)')
+    parser.add_argument('-f'
+                        , metavar='FILE PATH'
+                        , type=str
+                        ,default='./errTrans.ini'
+                        ,required=False
+                        , help='trans file path')
     
     args = parser.parse_args()
-    return args.i, args.p
+    return args.i, args.p,args.f
  
 def main():
-    ipaddr,port = argc()
-    print('ipaddr:', ipaddr, ', port=', port)
+    ipaddr,port,file = argc()
+    print('ipaddr:', ipaddr, ', port=', port,'file=',file)
     svr = CServer()
-    svr.SetServer(ipaddr, port)
-    svr.run()
+    if (svr.LoadConfig(file) == True):
+        svr.SetServer(ipaddr, port)
+        svr.run()
+    else:
+        svr.log.warnLog("load trans errof file error.")
     
 if (__name__ == "__main__"):
     #print(os.getcwd())
