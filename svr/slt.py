@@ -230,6 +230,10 @@ class CServer:
             #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
+        except ...:
+            print("unknown error")
+            self.log.warnLog("unknown error")
+            
     def LoadConfig(self, path):
         try:
             self.conf.load(path)
