@@ -7,12 +7,26 @@ import json
 import configparser
 import os
 import argparse
-#import logging
+import logging
 from urllib.parse import unquote, quote
 
 """
 
 """
+class Logger:
+    def __init__(self):
+        logging.basicConfig(filename='info.log',
+                    filemode='a',
+                    level = logging.INFO,
+                    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+                    )
+        self.log = logging.getLogger(__name__)
+    def dbgLog(self, info):
+        self.log.debug(info)
+    def warnLog(self,info):
+        self.log.warning(info)
+    def infoLog(self, info):
+        self.log.info(info)
 
 class DrClientConfig:
     def __init__(self):
@@ -206,6 +220,7 @@ class CServer:
             self.ver = self.conf.GetVersion()
             self.transdata = self.conf.GetTransError()
             self.resp = Response()
+            self.log = Logger()
 #            self.log = logging.getLogger(__name__)
             #print("self.transdata:", self.transdata)
         except OSError as e:
@@ -233,9 +248,9 @@ class CServer:
             if (conn):
                 data = conn.recv(1024)
         except BlockingIOError:
-            print('write block io error')
+            self.log.warnLog('write block io error')
         if (data):
-            print('write recv data:', data)
+            self.log.info('write recv data:', data)
         self.sel.unregister(conn)
         conn.close()
         
@@ -277,7 +292,7 @@ class CServer:
                     #print("send data len=", len(senddata))
                     conn.send(senddata)  
                 elif (req.path == 'upvers'):
-                    print("upvers")
+                    self.log.dbgLog("upvers")
 #                elif (req.method == 'POST'):
                     # 异步处理接收，暂用不上
 #                    conn = self.sel.modify(conn, selectors.EVENT_WRITE, self.write)
@@ -286,10 +301,12 @@ class CServer:
 #                self.sel.unregister(conn)
 #                conn.close()   
         except AttributeError as e:
-            print('cannot read data:', str(e))
+            self.log.warnLog('cannot read data:')
+            self.log.warnLog(str(e))
         finally:
             if (conn):
-#                print('closing=>', conn)
+                self.log.dbgLog('closing=>')
+                self.log.dbgLog(conn)
                 self.sel.unregister(conn)
                 conn.close()
             
