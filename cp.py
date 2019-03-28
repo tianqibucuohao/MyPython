@@ -1,5 +1,9 @@
 import threading
 import time
+
+"""
+生产者与消费者
+"""
  
 condition = threading.Condition()
 products = 0
