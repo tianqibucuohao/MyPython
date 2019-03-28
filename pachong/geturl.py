@@ -9,13 +9,13 @@ import urllib.request
 #        f.close()
 
 #os.chdir("f:\python")
-#try:
-    url="http://192.168.52.149:8088/getvers?ver=1.2.1"
+try:
+    url="http://192.168.52.149:8088/getvers?ver=1.1.1"
     html=urllib.request.urlopen(url)
     byt = html.read()
     html.close()
     print(byt)
 #except RemoteDisconnected as e:
 #    print(str(e))
-#except ...:
-#    print("error")
+except ...:
+    print("error")

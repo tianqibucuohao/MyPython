@@ -183,6 +183,7 @@ class Request:
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
             print("index error")
+            return 0
         except ... :
             return 0
         return 1
