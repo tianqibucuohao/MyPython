@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-img = cv2.imread('1.jpg')
+img = cv2.imread('blox.jpg')
 
 px = img[100,100]
 print(px)
@@ -23,7 +23,7 @@ print( img.size)
 
 print( img.dtype)
 
-ball = img[280:350, 330,390]
+ball = img[80:150, 130,100]
 # roi  copy or clip area
 img[100:300,100:400] = ball
 
