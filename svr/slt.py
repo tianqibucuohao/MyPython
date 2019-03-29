@@ -182,7 +182,7 @@ class Request:
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
-            print("index error")
+            print("index error:",self.content)
             return 0
         except ... :
             return 0
