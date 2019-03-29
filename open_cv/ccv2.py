@@ -11,4 +11,4 @@ def pltshow(path):
     
 if (__name__ == "__main__"):
     help(pltshow)
-    pltshow('bra.jpg')
+    pltshow('blox.jpg')

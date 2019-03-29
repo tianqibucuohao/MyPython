@@ -18,3 +18,6 @@ cv2.polylines(img,[pts],True,(0,255,255))
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 cv2.putText(img,'OpenCV',(10,500), font, 4,(255,255,255),2,cv2.LINE_AA)
+cv2.imshow('cc', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
