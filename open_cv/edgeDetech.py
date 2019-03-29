@@ -9,10 +9,15 @@ Created on Thu Mar 28 09:59:39 2019
 
 import cv2 as cv
 #import convenience.grab_contours
-import imutils
+from . import imutils
+from skimage.filters import threshold_local
+import numpy as np
 
 path = "20190218170703.png"
 img = cv.imread(path)
+ratio = img.shape[0]/500.0
+orig = img.copy()
+
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 gray = cv.GaussianBlur(gray, (5,5), 0)
 edged = cv.Canny(gray, 75, 200)
@@ -29,8 +34,11 @@ for c in cnts:
 
 cv.drawContours(img, [scr],-1, (0,255,0),2)    
 
-warped = imutils.four_point_transform(org,scr.reshape(4,2)*ratio)
-
+warped = imutils.four_point_transform(orig,scr.reshape(4,2)*ratio)
+warped = cv.cvtColor(warped, cv.COLOR_BGR2GRAY)
+t = threshold_local(warped, 11, offset=10, method='gaussian')
+warped = (warped>t).astype("uint8")*255
+cv.imshow("scan", imutils.resize(warped, height=800))
 cv.imshow("canny", img)
 cv.waitKey(0)
 #cv.destoryWindow()
