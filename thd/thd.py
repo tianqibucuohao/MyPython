@@ -54,4 +54,5 @@ threads.append(thread3)
 # 等待所有线程完成
 for t in threads:
     t.join()
+    print(t.is_alive())
 print("Exiting Main Thread")

@@ -58,6 +58,10 @@ async def main3():
     except asyncio.TimeoutError:
         print('timeout!')
 
-
-asyncio.run(main1())
+try:
+    asyncio.run(main1())
+except asyncio.CancelledError:
+    pass    
+except Exception:
+    pass
 print("ok")
