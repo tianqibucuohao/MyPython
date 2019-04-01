@@ -5,7 +5,9 @@ import os
 global idx
 global infoStart
 global infoLen
-
+"""
+解文件出错
+"""
 def GetContent(file):
     lens = os.path.getsize(file)
     ff = open(file,"rb")

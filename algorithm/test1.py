@@ -24,7 +24,7 @@ def main():
     """
     2种赋值写法
     """
-    if (1):
+    if (0):
         ls = []
         for i in range(6):
             ls.append(fs(i))

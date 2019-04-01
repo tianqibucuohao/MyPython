@@ -67,7 +67,7 @@ def TT(url):
 			break
 
 
-os.chdir("fD:\Python\self")
+os.chdir("D:\MyPython\self")
 mainulr=("https://share.dmhy.org/topics/list?keyword=%E6%B5%B7%E8%B4%BC%E7%8E%8B")
 host=cutUrlHost(mainulr)
 if (0):

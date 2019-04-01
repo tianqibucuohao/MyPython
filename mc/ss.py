@@ -4,6 +4,7 @@
 风格移植 
 运行环境：centos 
     python2.7 tensorflow + opencv
+    3.7没有tensorflow模块
 """
 import numpy as np
 import scipy.io
