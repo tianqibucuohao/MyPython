@@ -11,7 +11,7 @@ class myThread (threading.Thread):
         self.name = name
         self.counter = counter
     def run(self):
-        print( "Starting " + self.name)
+        print( "Starting ",self.name)
        # 获得锁，成功获得锁定后返回True
        # 可选的timeout参数不填时将一直阻塞直到获得锁定
        # 否则超时后将返回False
