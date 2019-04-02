@@ -158,7 +158,7 @@ class Response:
         return res   
     
 class Request:
-    def __init__(self, r):
+    def __init__(self, r, log):
 #        print('Request:',r)
         #整个http内容
         self.content = r
@@ -166,7 +166,7 @@ class Request:
         self.method = ''
         self.path = ''
         self.pathParam = ''
-
+        self.log = log
     def parse(self):
         try:
             # GET /POST ..
@@ -182,7 +182,9 @@ class Request:
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
-            print("index error:",self.content)
+            print("invalid request:",self.content)
+            self.log.warnLog("invalid request=>")
+            self.log.warnLog(self.content)
             return 0
         except ... :
             return 0
@@ -283,7 +285,7 @@ class CServer:
             print('block io error')
         try:    
             if (data):
-                req=Request(data.decode())
+                req=Request(data.decode(), self.log)
                 req.parse()
                 if (req.path == 'getvers'):
                     rcv = req.GetVersion()
@@ -340,7 +342,7 @@ class CServer:
                     #print('evnts:',events, ', maks=', mask)
                     callback(key.fileobj, mask)
         except KeyboardInterrupt:
-            print('key board error')
+            print('Get exit key')
         finally:
             self.sel.close()
             

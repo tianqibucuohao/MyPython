@@ -2,6 +2,10 @@ import threading
 import queue
 import time
 import hashlib
+"""
+线程锁，全局锁
+处理函数为全局，不能类内函数
+"""
 
 # 锁 演示
 class myThread (threading.Thread):
@@ -27,19 +31,16 @@ def print_time(threadName, delay, counter):
         print("%s: %s" % (threadName, time.ctime(time.time())))
         counter -= 1
  
-#同步锁
+#同步锁，全局
 threadLock = threading.Lock()
-threadCdsn = threading.Condition()
+#threadCdsn = threading.Condition()
 
 threads = []
-
  
 # 创建新线程
 thread1 = myThread(1, "Thread-1", 1)
 thread2 = myThread(2, "Thread-2", 2)
 thread3 = myThread(4, "Thread-3", 1)
-
-print(thread1.getName())
  
 # 开启新线程
 thread1.start()
