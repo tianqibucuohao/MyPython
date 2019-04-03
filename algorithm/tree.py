@@ -18,5 +18,46 @@ class TreeNode:
         self.right = None
         
 class Solution:
-    def preorderTraversal(self, root: TreeNode) -> List[int]:  
-        pass
+    def __init__(self,root = None):
+        self.preorder = []
+        self.inorder = []
+        self.postorder = []
+        self.root = root
+
+    def preorderTraversal(self, root: TreeNode) -> list[int]:  
+        if (root):
+            self.preorder.append(root.val)
+            self.preorderTraversal(root.left)
+            self.preorderTraversal(root.right)
+        return self.preorder
+    
+    def inorderTraversal(self, root:TreeNode) -> list[int]:
+        if (root):
+            self.inorderTraversal(root.left)
+            self.inorder.append(root.val)
+            self.inorderTraversal(root.right)
+        return self.inorder
+    def postorderTraversal(self,root:TreeNode) -> list[int]:
+        if (root):
+            self.postorderTraversal(root.left)
+            self.postorderTraversal(root.right)
+            self.postorder.append(root.val)
+        return self.postorder
+    def levelOrder(self, root: TreeNode) -> list[list[int]]:
+        if (not root):
+            return []
+        q=[root]
+        res=[]
+        while(q):
+            templist = []
+            length = len(q)
+            for i in range(length):
+                temp = q.pop(0)
+                templist.append(temp.val)
+                if temp.left:
+                    q.append(temp.left)
+                if temp.right:
+                    q.append(temp.right)
+            res.append(templist)
+        return res[::]
+            
