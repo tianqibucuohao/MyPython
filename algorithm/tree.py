@@ -22,6 +22,7 @@ class Solution:
         self.preorder = []
         self.inorder = []
         self.postorder = []
+        self.deepth = 0
         self.root = root
 
     def preorderTraversal(self, root: TreeNode) -> list[int]:  
@@ -60,4 +61,18 @@ class Solution:
                     q.append(temp.right)
             res.append(templist)
         return res[::]
-            
+    def maxDepth(self, root:TreeNode) -> int:
+        if (not root):
+            return 0
+        return max(self.maxDepth(root.left),self.maxDepth(root.right))+1
+    
+    def cmp(self, left:TreeNode, right:TreeNode) ->bool:
+        if (left == None and right == None):
+            return True
+        if (left and right and left.val == right.val):
+            return self.cmp(left.left, right.right) and self.cmp(left.right, right.left)
+        return False
+    def isSymmetric(self, root: TreeNode) -> bool:
+        if (root):
+            return self.cmp(root.left,root.right)
+        return True
