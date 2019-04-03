@@ -11,7 +11,9 @@ import logging
 from urllib.parse import unquote, quote
 
 """
-
+-i IP地址
+-p 商品
+-f 文件路径
 """
 class Logger:
     def __init__(self):
@@ -170,15 +172,15 @@ class Request:
     def parse(self):
         try:
             # GET /POST ..
-            self.method = self.content.split(' ')[0]
+            #self.method = self.content.split(' ')[0]
             self.header = self.GetHeaders()
-            self.path = (self.content.split(' ')[1].split('?')[0])[1:]
-            self.pathParam=self.content.split()[1].split('?')[1].split('&')
+            self.method,self.path = self.GetPath()#(self.content.split(' ')[1].split('?')[0])[1:]
+            #self.pathParam=self.content.split()[1].split('?')[1].split('&')
             #print('path param:', self.pathParam)
             #self.param = self._parse_parmeter(self.pathParam)
-#            print('method=', self.method
-#                  ,', path=', self.path
-#                  ,', param=', self.pathParam)
+            print('method=', self.method
+                  ,', path=', self.path
+                  ,', param=', self.pathParam)
             #print('headers', self.header)
     #        self.body = r.split('\r\n\r\n', 1)[1]
         except IndexError:
@@ -186,8 +188,8 @@ class Request:
             self.log.warnLog("invalid request=>")
             self.log.warnLog(self.content)
             return 0
-        except ... :
-            return 0
+        #except :
+        #    return 0
         return 1
 
     def GetHeaders(self):
@@ -197,10 +199,14 @@ class Request:
         for line in header_content:
             k, v = line.split(': ')
             result[quote(k)] = quote(v)
-        #print('result:',result)
+        print('result:',result)
         return result
     def GetPath(self):
-        return self.path
+        tmp = self.content.split('\r\n\r\n')[0].split('\r\n')[0].split(' ')
+        mtd = tmp[0]
+        path = tmp[1]
+        print("tmp:",tmp, ",method:", mtd, ",path:", path)
+        return mtd, path
     
     def GetVersion(self):
         if (self.GetPath() != 'getvers'):
@@ -233,7 +239,7 @@ class CServer:
             #print("self.transdata:", self.transdata)
         except OSError as e:
             print("some error:", str(e))
-        except ...:
+        except :
             print("unknown error")
             self.log.warnLog("unknown error")
             

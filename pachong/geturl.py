@@ -10,12 +10,10 @@ import urllib.request
 
 #os.chdir("f:\python")
 try:
-    url="http://192.168.52.149:8088/getvers?ver=1.1.1"
+    url="http://127.0.0.1:8088/getvers?ver=1.1.1&qq=2"
     html=urllib.request.urlopen(url)
     byt = html.read()
     html.close()
     print(byt)
-#except RemoteDisconnected as e:
-#    print(str(e))
-except ...:
+except :
     print("error")
