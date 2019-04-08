@@ -66,6 +66,7 @@ class Solution:
             return 0
         return max(self.maxDepth(root.left),self.maxDepth(root.right))+1
     
+    #对称二叉树
     def cmp(self, left:TreeNode, right:TreeNode) ->bool:
         if (left == None and right == None):
             return True
