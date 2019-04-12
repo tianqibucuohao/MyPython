@@ -29,11 +29,17 @@ class Logger:
         self.log.warning(info)
     def infoLog(self, info):
         self.log.info(info)
+        
+class myconf(configparser.ConfigParser):
+    def __init__(self,defaults=None, delimiters='='):
+        configparser.ConfigParser.__init__(self,defaults=None, delimiters='=')
+    def optionxform(self, optionstr):
+        return optionstr
 
 class DrClientConfig:
     def __init__(self):
         self.bIsOpen = False
-        self.config = configparser.ConfigParser()
+        self.config = myconf()#configparser.ConfigParser(delimiters='=')
         self.filepath=''
         self.ver=''
     def load(self, file):
