@@ -11,8 +11,8 @@ import skimage
 import cv2
 import imutils
 
-imgA = cv2.imread('bra.jpg')
-imgB = cv2.imread('bra.jpg')
+imgA = cv2.imread('blox.jpg')
+imgB = cv2.imread('blox.jpg')
 
 grayA = cv2.cvtColor(imgA, cv2.COLOR_BGR2GRAY)
 grayB = cv2.cvtColor(imgB, cv2.COLOR_BGR2GRAY)
