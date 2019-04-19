@@ -12,10 +12,16 @@ import cv2
 import imutils
 
 imgA = cv2.imread('blox.jpg')
-imgB = cv2.imread('blox.jpg')
+imgB = cv2.imread('20190218170703.png')
+w,h=imgA.shape[:2]
+print(w,h)
+imgB2 = cv2.resize(imgB, w, h)
+print(imgB2.shape[:2])
 
 grayA = cv2.cvtColor(imgA, cv2.COLOR_BGR2GRAY)
+print(grayA.shape[:2])
 grayB = cv2.cvtColor(imgB, cv2.COLOR_BGR2GRAY)
+print(grayB.shape[:2])
 
 (score, diff) = skimage.measure.compare_ssim(grayA, grayB, full=True)
 diff = (diff*255).astype("uint8")
