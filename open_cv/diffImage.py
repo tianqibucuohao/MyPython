@@ -9,7 +9,7 @@ compress image difference
 # skimage 图像处理库
 import skimage
 import cv2
-import imutils
+#import imutils
 
 imgA = cv2.imread('blox.jpg')
 imgB = cv2.imread('20190218170703.png')
