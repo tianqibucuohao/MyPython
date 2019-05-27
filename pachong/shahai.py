@@ -6,5 +6,5 @@ Created on Fri May 17 11:36:19 2019
 """
 
 import scrapy
-
+help(scrapy)
 print("ok")
