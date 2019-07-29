@@ -9,10 +9,12 @@ WiFidog-update
 
 import urllib.request,urllib.error
 import json
-import uuid
+#import uuid
 import hashlib
 import configparser
 import os,stat
+import re
+import datetime
 
 def LoadSetting(filepath):
     if (os.path.exists(filepath) == False):
@@ -21,16 +23,34 @@ def LoadSetting(filepath):
     conf.read(filepath)
     ip = conf.get("wifidog", "ip")
     port = conf.get("wifidog","port")
+    adp = conf.get("wifidog","adp")
     #print(ip, port)
-    return ip,port
+    return ip,port,adp
 
-def GetMac():
-    mac=uuid.UUID(int = uuid.getnode()).hex[-12:].upper()
-    #return '%s:%s:%s:%s:%s:%s' % (mac[0:2],mac[2:4],mac[4:6],mac[6:8],mac[8:10],mac[10:])
-    return "".join([mac[e:e+2] for e in range(0,11,2)])
+def GetMac(adp):
+    #mac=uuid.UUID(int = uuid.getnode()).hex[-12:].upper()
+    #return "".join([mac[e:e+2] for e in range(0,11,2)])
+    #return "000C298E72CB"
+    if (adp == ""):
+    	adp = "eth0"
+    #print adp
+    cmd=os.popen("ifconfig")
+    data=cmd.read()
+    cmd.close()
+    #print data
+
+    mat=adp+"\s*Link encap:\S*\s*HWaddr\s*\S*"
+    ret=re.findall(mat,data)
+    if (ret):
+        mac=ret[0].split(' ')[-1].upper()
+        print("re:",mac)
+        return "".join([mac[e:e+2] for e in range(0,18,3)])
+    else:
+        return ""
 
 def GetVer():
-    pass
+    ver=datetime.date.today().strftime("%Y%m%d")
+    return ver[2:]
 
 def CheckFileMD5(data, md5):
     ret = 0
@@ -110,7 +130,7 @@ def HttpGet(url):
         byt=f.read()
         f.close()
     except urllib.error.URLError as e:
-        print(e.reason())
+        print("url error")
     #字符数组转字符串
     #ret =repr(byt)
     return byt
@@ -141,22 +161,25 @@ def ParseJson(info):
     return ret,update,url,md5
 
 def GetUrl(ip, port, mac):
-    path = "/eportal/?c=wifidog&a=audit&mac="
+    path = "/eportal/?c=Wifidog&a=audit&mac="
     url = ip
     url += ":"
     url += port
     url += path
     url += mac
     url += "&ver="
+    url += GetVer()
     return url
 
 def main():
-    ip, port = LoadSetting("./wifidog.ini")
-    mac = GetMac()
+    ip, port,adp = LoadSetting("./wifidog.ini")
+    mac = GetMac(adp)
     url = GetUrl(ip, port, mac)
     print(url)
-    #rtn = HttpGet("http://192.168.23.3:8088/getvers?ver=10.0.1")
-    rtn = {"ret":0,"update":"1","url":"127.0.0.1:801/eportal/xxx","md5":"xxx","msg":"成功，但是审计包版本过低"}
+    rtn = HttpGet(url)
+    
+    if (rtn == ""):
+        return 0
     rtn = json.dumps(rtn, ensure_ascii=False)
     ret, update, url, md5 = ParseJson(rtn)
     if (ret == 0):

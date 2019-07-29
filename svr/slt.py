@@ -301,8 +301,8 @@ class CServer:
                 req.parse()
                 if (req.path == 'getvers'):
                     rcv = req.GetVersion()
-                    #print("read self ver", self.ver)
-                    #print('cmp:',self.conf.CmpVersio.n(rcv))
+                    print("read self ver", self.ver)
+                    print('cmp:',self.conf.CmpVersio.n(rcv))
                     cmp = self.conf.CmpVersion(rcv)
                     ret = ''
                     ver = ''

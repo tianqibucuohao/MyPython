@@ -15,5 +15,9 @@ try:
     byt = html.read()
     html.close()
     print(byt)
+    
 except :
     print("error")
+
+dicts = urllib.request.getproxies()
+print(dicts)
