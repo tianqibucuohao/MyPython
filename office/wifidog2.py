@@ -127,8 +127,8 @@ def GetVer():
     return ver
 
 def HttpGet(url):
-    loginfo("req url=>")
-    loginfo(url)
+    #loginfo("req url=>")
+    #loginfo(url)
     byt=''
     try:
         ret=urllib.urlopen(url)
@@ -276,15 +276,15 @@ def RUN():
                 if (len(url)>1 and len(md5)>1):
                     #print "ready to download..."
                     dl,file = DownloadFile(url, md5)
-                    loginfo( "download file finish...")
+                    #loginfo( "download file finish...")
                     if (dl==1):
                         WriteVer(ver)
-                        loginfo( "update finish!")
+                        #loginfo( "update finish!")
                         Runfile(file)
-                else:
-                    loginfo( "The lastest version and no need to update!")
+                #else:
+                    #loginfo("The lastest version and no need to update!")
             else:
-                loginfo( "already the lastest version!")
+                loginfo( "The already the lastest version!")
         else:
             loginfo( "update error:No authorization!")
     except TypeError as e:
@@ -299,7 +299,7 @@ def main():
     while (True):
         RUN()
         for i in range(0, 60):
-            time.sleep(2)
+            time.sleep(3)
             #print i
         
 def Shutdown(signalnum, frame):
