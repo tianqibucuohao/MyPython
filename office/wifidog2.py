@@ -27,10 +27,22 @@ def loginfo(info):
     path = path+"/pylog/"
     if (os.path.exists(path)==False):
         os.mkdir(path)
-    path = path+GetDate()+".log"
-    if (os.path.exists(path)==False):
+    file = path+"py.log"
+    #file not exist
+    if (os.path.exists(file)==False):
         f=open(path,"w")
         f.close()
+    #file size more than 10k
+    bk = False
+    if (os.path.getsize(file) > 10240):
+        bkfile = path+"py.log.pre"
+        os.rename(file,path)
+        bk=True
+    #file not exist
+    if (bk == True):
+        if (os.path.exists(file)==False):
+            f=open(path,"w")
+            f.close()
     logging.basicConfig(filename=path,  format="%(asctime)s %(name)s:%(levelname)s:%(message)s", datefmt="%d-%M-%Y %H:%M:%S", level=logging.DEBUG)
     logging.info(info)
     
@@ -65,13 +77,22 @@ def LoadSetting():
         path="."
     filepath = path + "/wifidog.ini"
     #print(filepath)
-    conf = ConfigParser.ConfigParser()
-    conf.read(filepath)
-    ip = conf.get("wifidog", "ip")
-    port = conf.get("wifidog","port")
-    ver = conf.get("wifidog","ver")
+    ip=''
+    port =''
+    ver=''
+    brand=''
+    try:
+        conf = ConfigParser.ConfigParser()
+        conf.read(filepath)
+        ip = conf.get("wifidog", "ip")
+        port = conf.get("wifidog","port")
+        ver = conf.get("wifidog","ver")
+        brand = conf.get("wifidog", "brand")
+    except ConfigParser.NoSectionError as e:
+        loginfo("ini file erro")
+        loginfo(format(e))
     #print(ip, port,ver)
-    return ip,port,ver
+    return ip,port,ver,brand
 
 def WriteVer(ver):
     path=os.getcwd()
@@ -239,14 +260,18 @@ def DownloadFile(url, md5):
     #print ret,filepath
     return ret,filepath
 
-def Runfile(path):
+def Runfile(path, brand):
     os.chmod(path, stat.S_IRWXU+stat.S_IRGRP+stat.S_IXGRP+stat.S_IROTH+stat.S_IXOTH)
-    path = "./"+path
+    path = "./" +path
+    if (len(brand)>2):
+        path = path+ " "+brand
     #os.exec(path)
+    loginfo("runfile :")
+    loginfo(path)
     thread.start_new_thread(os.system,(path,))
 
 def GetUrl():
-    ip, port,ver = LoadSetting()
+    ip, port,ver,brand = LoadSetting()
     adp=LoadAdpFromWfConf()
     urlpath="/eportal/?c=Wifidog&a=audit&mac="
     Mac=GetMac(adp)
@@ -279,8 +304,8 @@ def RUN():
                     #loginfo( "download file finish...")
                     if (dl==1):
                         WriteVer(ver)
-                        #loginfo( "update finish!")
-                        Runfile(file)
+                        loginfo("update finish!")
+                        Runfile(file, brand)
                 #else:
                     #loginfo("The lastest version and no need to update!")
             else:
@@ -299,7 +324,7 @@ def main():
     while (True):
         RUN()
         for i in range(0, 60):
-            time.sleep(3)
+            time.sleep(5)
             #print i
         
 def Shutdown(signalnum, frame):
