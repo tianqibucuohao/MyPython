@@ -243,7 +243,8 @@ def DownloadFile(url, md5):
     if (len(url)==0):
         return 0
     data = HttpGet(url)
-    filepath= CutURL(url)
+    #filepath= CutURL(url)
+    filepath='drcom_shenjihao.bin'
 #    print (data, filepath)
 #    print filepath
     ret = Save2File(filepath, data)

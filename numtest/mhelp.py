@@ -7,6 +7,7 @@ import subprocess
 import skimage
 import ffmpeg
 import scrapy
+import socket
 
-var =help(scrapy.Spider)
+var =help(socket.socket)
 #print(len(var))

@@ -32,7 +32,7 @@ def downloadfile(ftp, remotefile, localfile):
 
 
 #ftp = FTP(host='192.168.52.150')
-ftp = FTP(host='192.168.52.150', user='administrator',passwd='Drcom123')
+ftp = FTP(host='192.168.23.3', user='ftp',passwd='123')
 #ftp.login(user='administrator',passwd='Drcom123')
 print('dir:',ftp.dir())
 #ftp.set_debuglevel(2)
