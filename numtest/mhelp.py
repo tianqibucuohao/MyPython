@@ -6,6 +6,7 @@ import webbrowser
 import subprocess
 import skimage
 import ffmpeg
+import scrapy
 
-var =help(skimage.measure)
-#print(len(var))
+var =help(scrapy.Selector)
+print((var))
