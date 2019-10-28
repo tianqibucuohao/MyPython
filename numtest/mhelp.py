@@ -8,6 +8,7 @@ import skimage
 import ffmpeg
 import scrapy
 import socket
+from ftplib import FTP
 
-var =help(socket.socket)
+var =help(FTP.storbinary)
 #print(len(var))
