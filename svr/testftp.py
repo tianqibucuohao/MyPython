@@ -31,14 +31,15 @@ def downloadfile(ftp, remotefile, localfile):
     fp.close()
 
 
-#ftp = FTP(host='192.168.52.150')
-ftp = FTP(host='192.168.23.3', user='ftp',passwd='123')
-#ftp.login(user='administrator',passwd='Drcom123')
+ftp = FTP(host='192.168.52.150')
+#ftp = FTP(host='192.168.23.3', user='ftp',passwd='123')
+ftp.login(user='administrator',passwd='Drcom123')
 print('dir:',ftp.dir())
 #ftp.set_debuglevel(2)
 #dirname='./'
 #ftp.cwd(dirname)
-#uploadfile(ftp, 'dd.py', 'dd.py')
-downloadfile(ftp, '1.txt', '1.txt')
+uploadfile(ftp, 'ubuntu-18.04.3-desktop-amd64.iso', 'ubuntu-18.04.3-desktop-amd64.iso')
+#uploadfile(ftp, '7z_gui.sfx', '7z_gui.sfx')
+#downloadfile(ftp, '1.txt', '1.txt')
 #ftp.set_debuglevel(0)
 ftp.quit()
