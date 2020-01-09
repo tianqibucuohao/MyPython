@@ -64,11 +64,12 @@ def main():
 #            for i in msg:
 #                print("%#x"%ord(i))
             bs=bytesToHexString(msg)
-            print(bs)
-                      
+            print("bytesToHexString=>\n",bs)
             ss=bytes.decode(msg)
-            h=tohex(ss)
-            print("to hex:",h)
+            print(ss)
+           # ss=bytes.decode(msg)
+#            h=tohex(msg)
+#            print("to hex=>",h)
             bh = rc4(msg)
             print("rc4 decode is", bh)
 #            print("src is", msg)
